@@ -5,10 +5,9 @@ workflow VCF_TO_ANNO_MAF {
     caveman_vcfs 
     pindel_vcfs
 
-    
     main:
     caveman_vcfs
-    | join(pindel_vcfs)
+    | concat( pindel_vcfs )
     | set { raw_vcfs }
 
     FILTER_PASS_VARIANTS(raw_vcfs)

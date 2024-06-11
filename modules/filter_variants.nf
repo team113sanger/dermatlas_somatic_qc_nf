@@ -8,7 +8,7 @@ process FILTER_PASS_VARIANTS {
     def vcfout = "TBC"
     ouput: 
     tuple val(meta), path(vcfout), path("*.tbi")
-
+    
     script:
     """
     bcftools view -f PASS -O z -o $vcfout -T $bedfile $vcf
@@ -25,6 +25,7 @@ process FILTER_PASS_VARIANTS {
 
 process ADD_COMMON_ANNOTATIONS {
     container "gitlab//maf"
+    
     input:
     tuple val(meta), path(vcf), path(index)
 
