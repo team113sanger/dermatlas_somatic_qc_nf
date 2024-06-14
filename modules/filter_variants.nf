@@ -60,8 +60,6 @@ process ADD_COMMON_ANNOTATIONS {
 process QC_VARIANTS {
     container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf/feature/dockerise:2887f3df"
     publishDir "results", mode: params.publish_dir_mode
-
-
     input:
     path(file_list)
     path(vcflist)
@@ -94,16 +92,19 @@ process QC_VARIANTS {
 }
 
 
-// PLOT_SAMPLE_TMBS {
-//     input: 
+process CALCULATE_SAMPLE_TMB {
+    publishDir "results", mode: params.publish_dir_mode
+    input:
+    path(maf_file)
 
-//     output:
+    output:
+    path("mutations_per_Mb.tsv"), emit: tmb
 
-//     script:
-//     """
-//     for g in `cut -f 11 ${f}_*.maf |grep PD |sort -u`; do 
-//     echo -ne "$g\t"; muts=`grep $g ${f}_*maf | cut -f 4,5 |sort -u|wc -l`; echo $muts/48.225157 | bc -l;
-//     done > plots_${f}/mutations_per_Mb.tsv
-//     """
+    shell:
+    f = "TBC"
+    """
+    sample_ids=`cut -f 11 !{maf_file} | grep PD |sort -u`
+    for sample_id in "$sample_ids"; echo -ne "$sample_id\t"; muts=`grep "$sample_id" !{maf_file} | cut -f 4,5 | sort -u | wc -l`; echo "$muts"/48.225157 | bc -l; done > mutations_per_Mb.tsv
+    """
 
-// }
+}

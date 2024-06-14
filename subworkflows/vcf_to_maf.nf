@@ -1,4 +1,4 @@
-include { FILTER_PASS_VARIANTS; ADD_COMMON_ANNOTATIONS; QC_VARIANTS } from "../modules/filter_variants.nf"
+include { FILTER_PASS_VARIANTS; ADD_COMMON_ANNOTATIONS; QC_VARIANTS; CALCULATE_SAMPLE_TMB } from "../modules/filter_variants.nf"
 
 workflow VCF_TO_ANNO_MAF {
     take:
@@ -40,8 +40,6 @@ workflow VCF_TO_ANNO_MAF {
 
     annotated_files.merge(indices) 
     | set {all_files}
-    
-    all_files.view()
 
     QC_VARIANTS(file_list,
                 all_files,
@@ -50,6 +48,8 @@ workflow VCF_TO_ANNO_MAF {
                 filter_column, 
                 filter_mode,
                 "test_maf")
+    CALCULATE_SAMPLE_TMB(QC_VARIANTS.out.pass_maf)
+    
     
     // emit:
     // QC_VARIANTS.out.pass_maf
