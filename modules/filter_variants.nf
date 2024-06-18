@@ -1,5 +1,5 @@
 process FILTER_PASS_VARIANTS {
-    publishDir "${params.outdir}/${meta.sample_id}", mode: params.publish_dir_mode
+    publishDir "${meta.vcf_outdir}/${meta.sample_id}", mode: params.publish_dir_mode
     container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
     
     input: 
@@ -26,7 +26,7 @@ process FILTER_PASS_VARIANTS {
 
 
 process ADD_COMMON_ANNOTATIONS {
-    publishDir "results/${meta.sample_id}", mode: params.publish_dir_mode
+    publishDir "${meta.vcf_outdir}/${meta.sample_id}", mode: params.publish_dir_mode
     container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
     
     input:

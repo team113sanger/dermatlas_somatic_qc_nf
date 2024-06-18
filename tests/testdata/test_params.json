@@ -10,6 +10,8 @@
     "filter_option": "filter2",
     "release_version": "release_v1",
     "outdir": "results",
+    "caveman_outdir": "results/caveman",
+    "pindel_outdir": "results/pindel",
     "one_per_patient": "tests/testdata/one_tumor_per_patient_pairs.tsv",
     "independent": "tests/testdata/independent_pairs.tsv",
     "cohort_prefix": "6674_6675_Angioleiomyoma",
