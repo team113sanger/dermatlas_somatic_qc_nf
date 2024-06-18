@@ -18,7 +18,7 @@ workflow PROCESS_VCFS {
                            dbsnp_vars, 
                            dbsnp_header)
     ADD_COMMON_ANNOTATIONS.out.collect(flat: false)
-    | set { all_files }    
+    | set { all_files }
     
     emit:
     all_files
