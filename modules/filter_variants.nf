@@ -1,5 +1,5 @@
 process FILTER_PASS_VARIANTS {
-    publishDir "${meta.caller}/${meta.sample_id}", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/${meta.sample_id}", mode: params.publish_dir_mode
     container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
     
     input: 
@@ -10,7 +10,7 @@ process FILTER_PASS_VARIANTS {
     tuple val(meta), path("*.filt.vcf.gz"), path("*.tbi")
     
     script:
-    def vcfout = "$meta.sample_id"
+    def vcfout = "$meta.filename"
     """
     bcftools view -f PASS -O z -o ${vcfout}.filt.vcf.gz -T $bedfile $vcf
     tabix -p vcf ${vcfout}.filt.vcf.gz
@@ -26,7 +26,7 @@ process FILTER_PASS_VARIANTS {
 
 
 process ADD_COMMON_ANNOTATIONS {
-    publishDir "results/${meta.caller}/${meta.sample_id}", mode: params.publish_dir_mode
+    publishDir "results/${meta.sample_id}", mode: params.publish_dir_mode
     container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
     
     input:
@@ -39,7 +39,7 @@ process ADD_COMMON_ANNOTATIONS {
 
     script:
     def dbsnp_file = dbsnp_vars[0].name.split(".gz")[0]
-    def vcfout = "$meta.sample_id" + "_" + "$meta.caller"
+    def vcfout = "${meta.filename}" + ".filt"
     """
     bcftools annotate \
     -a ${dbsnp_file}.gz \

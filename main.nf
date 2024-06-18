@@ -15,11 +15,12 @@ workflow {
     baitset            = file(params.baitset, checkIfExists: true)
     metadata           = file(params.metadata_manifest, checkIfExists: true)
     all_pairs.view()
+    
     caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs)
-    | map {file -> tuple([sample_id: file.simpleName, caller: "caveman"], file)}
+    | map {file -> tuple([sample_id: file.simpleName, caller: "caveman", filename: file.name.split(".vcf")[0]], file)}
     pindel_vcf_ch = Channel.fromPath(params.pindel_vcfs)
-    | map {file -> tuple([sample_id: file.simpleName, caller: "pindel"], file)}
-
+    | map {file -> tuple([sample_id: file.simpleName, caller: "pindel", filename: file.name.split(".vcf")[0]], file)}
+    pindel_vcf_ch.view()
     // DERMATLAS_METADATA(independent_tumors, metadata)
     
     PROCESS_VCFS(caveman_vcf_ch, 
