@@ -10,7 +10,9 @@
     "filter_option": "filter2",
     "release_version": "release_v1",
     "outdir": "results",
-    "one_per_patient": "y",
-    "independent": "x"
-   
-   }
+    "one_per_patient": "tests/testdata/one_per_patient_pairs.tsv",
+    "independent": "tests/testdata/independent_pairs.tsv",
+    "cohort_prefix": "6509_2707_Leiomyoma",
+    "tumor_normal_pairs": "tests/testdata/pair_ids.tsv",
+    "metadata_manifest": "tests/testdata/metadata_tab.tsv"
+}

@@ -13,12 +13,7 @@ workflow PROCESS_VCFS {
     | concat( pindel_vcfs )
     | set { raw_vcfs }
 
-    raw_vcfs
-    | map{ meta, file -> meta}
-    | collectFile(name: "sample_list.tsv"){
-        meta -> 
-        ["sample_list.tsv", "${meta["sample_id"]}\n"]} 
-    | set {sample_list}
+
 
     FILTER_PASS_VARIANTS(raw_vcfs, baitset)
     
@@ -40,6 +35,12 @@ workflow PROCESS_VCFS {
     | set {indices}
 
 
+    raw_vcfs
+    | map{ meta, file -> meta}
+    | collectFile(name: "sample_list.tsv"){
+        meta -> 
+        ["sample_list.tsv", "${meta["sample_id"]}\n"]} 
+    | set {sample_list}
 
     annotated_files.merge(indices) 
     | set {all_files}

@@ -96,16 +96,19 @@ process QC_VARIANTS {
 process CALCULATE_SAMPLE_TMB {
     publishDir "results", mode: params.publish_dir_mode
     input:
-    path(maf_file)
+    path maf_file
 
     output:
     path("mutations_per_Mb.tsv"), emit: tmb
 
     shell:
-    f = "TBC"
     """
-    sample_ids=`cut -f 11 !{maf_file} | grep PD |sort -u`
-    for sample_id in "$sample_ids"; echo -ne "$sample_id\t"; muts=`grep "$sample_id" !{maf_file} | cut -f 4,5 | sort -u | wc -l`; echo "$muts"/48.225157 | bc -l; done > mutations_per_Mb.tsv
+    sample_ids=`cut -f 11 !{maf_file} | grep PD | sort -u`
+    for sample_id in '$sample_ids'; do
+        echo -ne '$sample_id\t'
+        muts=`grep '$sample_id' !{maf_file} | cut -f 4,5 | sort -u | wc -l`
+        echo '$muts / 48.225157' | bc -l
+    done > mutations_per_Mb.tsv
     """
 
 }
