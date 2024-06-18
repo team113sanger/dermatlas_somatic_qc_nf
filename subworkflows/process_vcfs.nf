@@ -17,35 +17,9 @@ workflow PROCESS_VCFS {
     ADD_COMMON_ANNOTATIONS(FILTER_PASS_VARIANTS.out, 
                            dbsnp_vars, 
                            dbsnp_header)
+    ADD_COMMON_ANNOTATIONS.out.collect(flat: false)
+    | set { all_files }    
     
-    ADD_COMMON_ANNOTATIONS.out.map{ meta, files, indexes -> files}.collect()
-    | set { annotated_files }
-
-
-    ADD_COMMON_ANNOTATIONS.out.map{ meta, files, indexes -> files.baseName}
-    | collectFile(name: "vcf_list.tsv", storeDir: "results"){
-        basenames ->
-        ["vcfs_list.tsv", basenames + ".gz\n"]} 
-    | set { file_list }
-
-    ADD_COMMON_ANNOTATIONS.out.map{ meta, files, indexes -> indexes}.collect()
-    | set {indices}
-
-
-    raw_vcfs
-    | map{ meta, file -> meta}
-    | collectFile(name: "sample_list.tsv"){
-        meta -> 
-        ["sample_list.tsv", "${meta["sample_id"]}\n"]} 
-    | set {sample_list}
-
-    annotated_files.merge(indices) 
-    | set {all_files}
-        
     emit:
-    file_list
     all_files
-    sample_list
-
-    
 }

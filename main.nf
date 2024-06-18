@@ -1,8 +1,8 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl = 2
 include { PROCESS_VCFS } from "./subworkflows/process_vcfs.nf"
-include { SUBSET_ANALYSIS } from "./subworkflows/analyse_subset.nf"
-include { DERMATLAS_METADATA } from "./subworkflows/process_metadata.nf"
+// include { SUBSET_ANALYSIS } from "./subworkflows/analyse_subset.nf"
+include { FILTER_SAMPLES } from "./subworkflows/filter_subset.nf"
 
 workflow {
     
@@ -13,7 +13,7 @@ workflow {
     dbsnp_vars         = file(params.dbsnp_variants, checkIfExists: true)
     dbsnp_header       = file(params.dbsnp_header, checkIfExists: true)
     baitset            = file(params.baitset, checkIfExists: true)
-    metadata           = file(params.metadata_manifest, checkIfExists: true)
+    metadata           = Channel.fromPath(params.metadata_manifest, checkIfExists: true)
     
     caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs)
     | map {file -> tuple([sample_id: file.simpleName, 
@@ -25,29 +25,25 @@ workflow {
                           caller: "pindel", 
                           filename: file.name.split(".vcf")[0],
                           vcf_outdir: params.pindel_outdir], file)}
-    // DERMATLAS_METADATA(independent_tumors, metadata)
-    
+
     PROCESS_VCFS(caveman_vcf_ch, 
                  pindel_vcf_ch,
                  baitset, 
                  dbsnp_vars, 
                  dbsnp_header)
-    // DIVIDE_COHORT(PROCESS_VCFS.out.file_list,
-    //               PROCESS_VCFS.out.all_files,
-    //               PROCESS_VCFS.out.sample_list,
-    //               all_pairs
-    //               unique_pairs
-    //               independent_tumors
-    //               )
+
+    FILTER_SAMPLES(PROCESS_VCFS.out.all_files, unique_pairs)
+    
+  
    
-   SUBSET_ANALYSIS(
-    PROCESS_VCFS.out.file_list,
-    PROCESS_VCFS.out.all_files,
-    PROCESS_VCFS.out.sample_list,
-    params.genome_build,
-    params.filtering_column,
-    params.filter_option
-   )
+//    SUBSET_ANALYSIS(
+//     PROCESS_VCFS.out.file_list,
+//     PROCESS_VCFS.out.all_files,
+//     PROCESS_VCFS.out.sample_list,
+//     params.genome_build,
+//     params.filtering_column,
+//     params.filter_option
+//    )
     
 
 }
