@@ -1,6 +1,7 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl = 2
-include { VCF_TO_ANNO_MAF } from "./subworkflows/vcf_to_maf.nf"
+include { PROCESS_VCFS } from "./subworkflows/process_vcfs.nf"
+include { SUBSET_ANALYSIS } from "./subworkflows/analyse_subset.nf"
 
 workflow {
     caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs)
@@ -12,14 +13,21 @@ workflow {
     dbsnp_header = file(params.dbsnp_header, checkIfExists: true)
     baitset = file(params.baitset, checkIfExists: true)
     
-    VCF_TO_ANNO_MAF(caveman_vcf_ch, 
+    PROCESS_VCFS(caveman_vcf_ch, 
                     pindel_vcf_ch,
                     baitset, 
                     dbsnp_vars, 
-                    dbsnp_header,
-                    params.genome_build,
-                    params.filtering_column,
-                    params.filter_option)
+                    dbsnp_header)
+   
+   SUBSET_ANALYSIS(
+    PROCESS_VCFS.out.file_list,
+    PROCESS_VCFS.out.all_files,
+    PROCESS_VCFS.out.sample_list,
+    params.genome_build,
+    params.filtering_column,
+    params.filter_option
+   )
+    
 
 }
 

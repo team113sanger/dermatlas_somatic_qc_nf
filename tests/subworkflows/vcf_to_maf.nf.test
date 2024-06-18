@@ -7,10 +7,9 @@ nextflow_workflow {
     test("Should run without failures") {
 
         when {
-            params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
-            }
+        params {
+            load("$baseDir/tests/testdata/test_params.json")
+        }
             workflow {
                 """
                 // define inputs of the workflow here. Example:

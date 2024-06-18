@@ -1,5 +1,5 @@
 process FILTER_PASS_VARIANTS {
-    publishDir "results/${meta.caller}/${meta.sample_id}", mode: params.publish_dir_mode
+    publishDir "${meta.caller}/${meta.sample_id}", mode: params.publish_dir_mode
     container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
     
     input: 
@@ -27,7 +27,7 @@ process FILTER_PASS_VARIANTS {
 
 process ADD_COMMON_ANNOTATIONS {
     publishDir "results/${meta.caller}/${meta.sample_id}", mode: params.publish_dir_mode
-    container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"    
+    container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
     
     input:
     tuple val(meta), path(vcf), path(index)
@@ -35,7 +35,7 @@ process ADD_COMMON_ANNOTATIONS {
     path(header)
 
     output:
-    tuple path("*snpflagged.vcf.gz"), path("*snpflagged.vcf.gz.tbi")
+    tuple val(meta), path("*snpflagged.vcf.gz"), path("*snpflagged.vcf.gz.tbi")
 
     script:
     def dbsnp_file = dbsnp_vars[0].name.split(".gz")[0]
@@ -59,7 +59,8 @@ process ADD_COMMON_ANNOTATIONS {
 
 process QC_VARIANTS {
     container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf/feature/dockerise:38bd755a"
-    publishDir "results", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/${params.release_version}", mode: params.publish_dir_mode
+    
     input:
     path(file_list)
     path(vcflist)

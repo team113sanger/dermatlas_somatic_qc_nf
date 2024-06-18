@@ -7,6 +7,8 @@
  "dbsnp_header": "/lustre/scratch124/resources/dermatlas/dbsnp/addheader.txt",
  "genome_build": "GRCh38", 
  "filtering_column": "gnomAD_AF", 
- "filter_option": "filter2"
+ "filter_option": "filter2",
+ "release_version": "release_v1",
+ "outdir": "results"
 
 }
