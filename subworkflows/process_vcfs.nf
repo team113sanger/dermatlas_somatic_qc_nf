@@ -14,9 +14,8 @@ workflow PROCESS_VCFS {
     | set { raw_vcfs }
 
 
-
+    raw_vcfs.view()
     FILTER_PASS_VARIANTS(raw_vcfs, baitset)
-    
     ADD_COMMON_ANNOTATIONS(FILTER_PASS_VARIANTS.out, 
                            dbsnp_vars, 
                            dbsnp_header)
