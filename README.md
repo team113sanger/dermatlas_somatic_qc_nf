@@ -16,16 +16,27 @@ In brief, the pipeline takes a set samples that have been pre-processed by the D
 ## Inputs 
 
 ### Cohort-dependent variables
+
+- `caveman_vcfs`:
+- `pindel_vcfs`:
 - `metadata_manifest`: path to a tab-delimited manifest containing sample PD IDs and information about sample phenotype/preparation.
 - `tumor_normal_pairs`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
 - `one_per_patient`: path to a file containing a tab-delimited list of matched tumour-normal pairs with one patient selected per-tumor.
 - `independent`: path to a file containing a tab-delimited list of matched tumour-normal pairs with all independent comparisons to perform.
+- `cohort_prefix`: 
+- `PROJECTDIR`:
+- `release_version`:
+- `outdir`:
+
+
 
 ### Cohort-independent variables
 Reference files that are reused across pipeline executions have been placed within the pipeline's default `nextflow.config` file to simplify configuration and can be ommited from setup. Behind the scences though, the following reference files are required for a run: 
-- `reference_genome`: path to a reference genome file (ASCAT).
-- `bait_set`: path to a `.bed` file describing the analysed genomic regions  (ASCAT).
-- `resource_files`: path to a directory containing ASCAT loci and allele files.
+- `dbsnp_variants`
+- `dbsnp_header`
+- `genome_build`
+- `filtering_column`
+- `filter_option`
 
 Default reference file values supplied within the `nextflow.config` file can be overided by adding them to the params `.json` file. An example complete params file `example_params.json` is supplied within this repo for demonstation.
 
