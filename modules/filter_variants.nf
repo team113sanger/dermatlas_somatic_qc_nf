@@ -59,7 +59,7 @@ process ADD_COMMON_ANNOTATIONS {
 
 process QC_VARIANTS {
     container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf/feature/dockerise:38bd755a"
-    publishDir "${params.outdir}/${params.release_version}", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/${params.release_version}/${analysis_type}", mode: params.publish_dir_mode
     
     input:
     path(file_list)
@@ -69,6 +69,7 @@ process QC_VARIANTS {
     val(AF_COL)
     val(filter)
     val(maf_file)
+    val(analysis_type)
 
     output: 
     path("pass*.maf"), emit: pass_maf

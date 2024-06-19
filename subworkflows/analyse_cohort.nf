@@ -53,7 +53,8 @@ workflow COHORT_ANALYSIS{
                 genome_build, 
                 filter_column, 
                 filter_mode,
-                "test_maf")
+                "test_maf",
+                "analysis_type")
     // CALCULATE_SAMPLE_TMB(QC_VARIANTS.out.pass_maf)
 
 
