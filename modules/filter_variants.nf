@@ -58,25 +58,25 @@ process ADD_COMMON_ANNOTATIONS {
 
 
 process QC_VARIANTS {
-    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf/feature/dockerise:38bd755a"
-    publishDir "${params.outdir}/${params.release_version}/${analysis_type}", mode: params.publish_dir_mode
+    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf/feature/dockerise:3511b8f1"
+    publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
     
     input:
+    tuple val(meta), path(vcf_files)
     path(file_list)
-    path(vcflist)
     path(sample_list)
     val(BUILD)
     val(AF_COL)
     val(filter)
-    val(maf_file)
-    val(analysis_type)
 
     output: 
-    path("pass*.maf"), emit: pass_maf
-    path("voi*.maf"), emit: voi_maf
+    tuple val(meta), path("pass*.maf"), emit: pass_maf
+    tuple val(meta), path("voi*.maf"), emit: voi_maf
+    tuple val(meta), path("keep*.maf"), emit: keep_maf
+    tuple val(meta), path("plots*"), emit: plot_dirs
 
     script:
-    def f = "TBC"
+    def f = "${meta.analysis_type}"
     """
     /opt/repo/qc_somatic_variants.sh \
     -l $file_list \
@@ -95,21 +95,21 @@ process QC_VARIANTS {
 
 
 process CALCULATE_SAMPLE_TMB {
-    publishDir "results", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}/plots_${file_id}", mode: params.publish_dir_mode
     input:
-    path maf_file
+    tuple val(meta), path(maf_file)
 
     output:
     path("mutations_per_Mb.tsv"), emit: tmb
 
     shell:
+    file_id = maf_file.name.split("caveman")[0]
     """
-    sample_ids=`cut -f 11 !{maf_file} | grep PD | sort -u`
-    for sample_id in '$sample_ids'; do
-        echo -ne '$sample_id\t'
-        muts=`grep '$sample_id' !{maf_file} | cut -f 4,5 | sort -u | wc -l`
-        echo '$muts / 48.225157' | bc -l
-    done > mutations_per_Mb.tsv
+    sample_ids="\$(cut -f 11 !{maf_file} | grep PD | sort -u)"
+    for sample in "\${sample_ids}"; do 
+        echo -ne "\${sample}\t"; muts="\$(grep "\${sample}" !{maf_file} | cut -f 4,5 |sort -u|wc -l)"; echo "\${muts}/48.225157" | bc -l;
+    done > mutations_per_Mb.tsv;
+    echo !{file_id}
     """
 
 }

@@ -28,6 +28,7 @@ workflow COHORT_ANALYSIS{
     | set { filtered_vcfs }
 
     filtered_vcfs.map{ meta, file, index -> [file, index]}.flatten().collect()
+    | map {file_list -> tuple([analysis_type: analysis_type], file_list)}
     | set { relevant_vcfs }
     
     filtered_vcfs
@@ -47,15 +48,15 @@ workflow COHORT_ANALYSIS{
     | set { file_list }
 
 
-    QC_VARIANTS(file_list,
-                relevant_vcfs,
+    QC_VARIANTS(relevant_vcfs,
+                file_list,
                 sample_list, 
                 genome_build, 
                 filter_column, 
-                filter_mode,
-                "test_maf",
-                "analysis_type")
-    // CALCULATE_SAMPLE_TMB(QC_VARIANTS.out.pass_maf)
+                filter_mode)
+
+    QC_VARIANTS.out.keep_maf.map{ file -> tuple([analysis_type: analysis_type], file)}
+    // CALCULATE_SAMPLE_TMB()
 
 
 
