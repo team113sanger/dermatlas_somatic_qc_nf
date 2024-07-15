@@ -55,8 +55,8 @@ workflow COHORT_ANALYSIS{
                 filter_column, 
                 filter_mode)
 
-    QC_VARIANTS.out.keep_maf.map{ file -> tuple([analysis_type: analysis_type], file)}
-    // CALCULATE_SAMPLE_TMB()
+    keep_ch = QC_VARIANTS.out.keep_maf.transpose()
+    CALCULATE_SAMPLE_TMB(keep_ch)
 
 
 
