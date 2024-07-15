@@ -58,7 +58,7 @@ process ADD_COMMON_ANNOTATIONS {
 
 
 process QC_VARIANTS {
-    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf/feature/dockerise:3511b8f1"
+    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf:0.5.1"
     publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
     
     input:
@@ -78,7 +78,7 @@ process QC_VARIANTS {
     script:
     def f = "${meta.analysis_type}"
     """
-    /opt/repo/qc_somatic_variants.sh \
+    /opt/repo/somatic_variants_qc.sh \
     -l $file_list \
     -m caveman_pindel_${f}.maf \
     -s /opt/repo \
