@@ -10,6 +10,6 @@
         "ghcr.io/rocker-org/devcontainer-features/r-rig:1": {}
     },
     "mounts": [
-        "source=/lustre/scratch124/jb63,target=/opt/data,type=bind,consistency=cached"
+        "source=/lustre/scratch124,target=/lustre/scratch124,type=bind,consistency=cached"
       ]
 }

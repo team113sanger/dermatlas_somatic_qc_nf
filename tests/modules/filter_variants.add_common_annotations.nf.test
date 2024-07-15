@@ -1,0 +1,30 @@
+nextflow_process {
+
+    name "Test Process ADD_COMMON_ANNOTATIONS"
+    script "modules/filter_variants.nf"
+    process "ADD_COMMON_ANNOTATIONS"
+
+    test("Should run without failures") {
+
+        when {
+        params {
+            load("$baseDir/tests/testdata/test_params.json")
+        }
+        process {
+                """
+                input[0] = tuple([sample_id: "example", caller: "pindel"], 
+                file("$baseDir/tests/testdata/example.filt.vcf.gz"), file("$baseDir/tests/testdata/example.filt.vcf.gz.tbi"))
+                input[1] = file("${params.dbsnp_variants}")
+                input[2] = file("${params.dbsnp_header}")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

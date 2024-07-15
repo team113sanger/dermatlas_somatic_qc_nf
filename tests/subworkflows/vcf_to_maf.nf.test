@@ -1,0 +1,28 @@
+nextflow_workflow {
+
+    name "Test Workflow VCF_TO_ANNO_MAF"
+    script "subworkflows/vcf_to_maf.nf"
+    workflow "VCF_TO_ANNO_MAF"
+
+    test("Should run without failures") {
+
+        when {
+        params {
+            load("$baseDir/tests/testdata/test_params.json")
+        }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                // input[0] = file("test-file.txt")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

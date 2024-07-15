@@ -16,11 +16,8 @@ services:
         source: ./
         target: /opt/repo/
       - type: bind
-        source: /lustre/scratch124/resources
-        target: /lustre/scratch124/resources
-      - type: bind
-        source: /lustre/scratch124/jb63
-        target: /lustre/scratch124/jb63
+        source: /lustre/scratch124
+        target: /lustre/scratch124
     networks:
       - local-default
 
