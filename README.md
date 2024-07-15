@@ -87,9 +87,6 @@ The pipeline can configured to run on either Sanger OpenStack secure-lustre inst
 ## Pipeline visualisation 
 Created using nextflow's in-built visualitation features.
 
-```mermaid
-
-```
 
 ## Testing
 
