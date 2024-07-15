@@ -17,26 +17,26 @@ In brief, the pipeline takes a set samples that have been pre-processed by the D
 
 ### Cohort-dependent variables
 
-- `caveman_vcfs`:
-- `pindel_vcfs`:
+- `caveman_vcfs`: path to a set of Caveman vcf files (using **.vcf expansion)
+- `pindel_vcfs`: path to a set of Pindel vcf files (using **.vcf expansion)
 - `metadata_manifest`: path to a tab-delimited manifest containing sample PD IDs and information about sample phenotype/preparation.
 - `tumor_normal_pairs`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
 - `one_per_patient`: path to a file containing a tab-delimited list of matched tumour-normal pairs with one patient selected per-tumor.
 - `independent`: path to a file containing a tab-delimited list of matched tumour-normal pairs with all independent comparisons to perform.
-- `cohort_prefix`: 
-- `PROJECTDIR`:
-- `release_version`:
-- `outdir`:
+- `cohort_prefix`: Prefix to add to outputs
+- `PROJECTDIR`: Deprecated Project dir variable from when relative paths were important (use `.`)
+- `outdir`: Directory to publish results 
+- `release_version`: Directory to release results into within outdir (e.g.`release_v1`)
 
 
 
 ### Cohort-independent variables
 Reference files that are reused across pipeline executions have been placed within the pipeline's default `nextflow.config` file to simplify configuration and can be ommited from setup. Behind the scences though, the following reference files are required for a run: 
-- `dbsnp_variants`
-- `dbsnp_header`
-- `genome_build`
-- `filtering_column`
-- `filter_option`
+- `dbsnp_variants`: path to DBSNP vcf file adn it's tbi index file (`dbSNP155_common.tsv.gz{,.tbi}`)
+- `dbsnp_header`: Path to a file containing dbsnp header info
+- `genome_build`: Genome build string (`GRCh38`)
+- `filtering_column`: Column within vcf to use in filtering likely germline vars (`gnomAD_AF`)
+- `filter_option`: String to determine how outputs are filtered (One of filter1, filter2)
 
 Default reference file values supplied within the `nextflow.config` file can be overided by adding them to the params `.json` file. An example complete params file `example_params.json` is supplied within this repo for demonstation.
 
