@@ -1,0 +1,18 @@
+{
+    "caveman_vcfs": "/lustre/scratch124/jb63/mafqc/caveman_files/**.smartphase.vep.vcf.gz",
+    "pindel_vcfs": "/lustre/scratch124/jb63/mafqc/pindel_files/**.pindel.vep.vcf.gz",
+    "baitset": "/lustre/scratch124/resources/dermatlas/GRCh38_WES5_canonical_pad100.merged.bed",
+    "PROJECTDIR": ".",
+    "dbsnp_variants": "/lustre/scratch124/resources/dermatlas/dbsnp/dbSNP155_common.tsv.gz{,.tbi}",
+    "dbsnp_header": "/lustre/scratch124/resources/dermatlas/dbsnp/addheader.txt",
+    "genome_build": "GRCh38", 
+    "filtering_column": "gnomAD_AF", 
+    "filter_option": "filter2",
+    "release_version": "release_v1",
+    "outdir": "results",
+    "one_per_patient": "tests/testdata/one_per_patient_pairs.tsv",
+    "independent": "tests/testdata/independent_pairs.tsv",
+    "cohort_prefix": "6674_6675_Angioleiomyoma",
+    "tumor_normal_pairs": "tests/testdata/all_matched_pairs.tsv",
+    "metadata_manifest": "tests/testdata/metadata_tab.tsv"
+}

@@ -1,0 +1,31 @@
+services:
+  dermatlas_mafqc_nf:
+    container_name: dermatlas_mafqc_nf
+    user: admin
+    image: project:local
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 8001
+    # You want the container to stay up forever while you're developing.
+    command: sleep infinity
+    volumes:
+      - type: bind
+        source: ./
+        target: /opt/repo/
+      - type: bind
+        source: /lustre/scratch124
+        target: /lustre/scratch124
+    networks:
+      - local-default
+
+networks:
+  local-default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1350
+    ipam:
+      config:
+        - subnet: 192.168.12.0/24
