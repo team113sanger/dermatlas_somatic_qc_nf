@@ -1,17 +1,16 @@
 nextflow_process {
 
-    name "Test Process QC_VARIANTS"
-    script "modules/filter_variants.nf"
-    process "QC_VARIANTS"
+    name "Test Process CALCULATE_SAMPLE_TMB"
+    script "modules/calculate_tmb.nf"
+    process "CALCULATE_SAMPLE_TMB"
 
     test("Should run without failures") {
 
         when {
-        params {
-            load("$baseDir/tests/testdata/test_params.json")
-        }
             process {
                 """
+                input[0] = tuple([empty: 'test'], file("$baseDir/tests/testdata/example_maf.maf"))
+                input[1] = 48.225157
                 """
             }
         }
