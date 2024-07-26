@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Todo
 - Support for tsv -> .xlsx conversion is still required
-- Calculate tumour mutation burden
 - Make a variant release
+
+# 0.2.0
+### Added
+- Calculate and output tumour mutation burden
+- Harmonised script name inside and outside of container (MAF) added here
 
 # 0.1.1
 ### Changed
