@@ -1,4 +1,6 @@
-include { QC_VARIANTS; CALCULATE_SAMPLE_TMB } from "../modules/filter_variants.nf"
+include { QC_VARIANTS } from "../modules/filter_variants.nf"
+include { CALCULATE_SAMPLE_TMB } from "../modules/calculate_tmb.nf"
+
 workflow COHORT_ANALYSIS{
     take: 
     vcf_ch
