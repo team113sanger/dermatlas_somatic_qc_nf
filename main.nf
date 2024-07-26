@@ -34,26 +34,30 @@ workflow {
                  dbsnp_vars,
                  dbsnp_header)
 
+    ANALYSE_ALL(PROCESS_VCFS.out.all_files, 
+            all_pairs,
+            params.genome_build,
+            params.filtering_column,
+            params.filter_option,
+            "all")
+    
+    // if (!isEmpty(unique_pairs)){
     ANALYSE_OTPP(PROCESS_VCFS.out.all_files, 
                 unique_pairs,
                 params.genome_build,
                 params.filtering_column,
                 params.filter_option,
                 "one_tumor_per_patient")
-    
-    ANALYSE_ALL(PROCESS_VCFS.out.all_files, 
-                all_pairs,
-                params.genome_build,
-                params.filtering_column,
-                params.filter_option,
-                "all")
-    
+    // }
+
+    // if (!isEmpty(independent_tumors)){
     ANALYSE_INDEPENDENT(PROCESS_VCFS.out.all_files, 
                         independent_tumors,
                         params.genome_build,
                         params.filtering_column,
                         params.filter_option,
                         "independent")
+                        // }
 
 }
 

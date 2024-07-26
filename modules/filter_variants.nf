@@ -103,13 +103,14 @@ process CALCULATE_SAMPLE_TMB {
     path("mutations_per_Mb.tsv"), emit: tmb
 
     shell:
-    file_id = maf_file.name.split("caveman")[0]
+    file_id = maf_file.name.split("_caveman")[0]
     """
     sample_ids="\$(cut -f 11 !{maf_file} | grep PD | sort -u)"
-    for sample in "\${sample_ids}"; do 
-        echo -ne "\${sample}\t"; muts="\$(grep "\${sample}" !{maf_file} | cut -f 4,5 |sort -u|wc -l)"; echo "\${muts}/48.225157" | bc -l;
-    done > mutations_per_Mb.tsv;
-    echo !{file_id}
+    for sample in "\${sample_ids[@]}"; do 
+        echo -ne "\${sample}\t" >> mutations_per_Mb.tsv
+        muts="\$(grep "\${sample}" !{maf_file} | cut -f 4,5 | sort -u | wc -l )"
+        echo "\${muts}/48.225157" | bc -l >> mutations_per_Mb.tsv
+    done 
     """
 
 }
