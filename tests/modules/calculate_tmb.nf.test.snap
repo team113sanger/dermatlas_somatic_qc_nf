@@ -1,0 +1,19 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "mutations_per_Mb.tsv:md5,933d7a1a7a8a90a79f9bf3116338e237"
+                ],
+                "tmb": [
+                    "mutations_per_Mb.tsv:md5,933d7a1a7a8a90a79f9bf3116338e237"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-07-26T19:33:36.28603"
+    }
+}
