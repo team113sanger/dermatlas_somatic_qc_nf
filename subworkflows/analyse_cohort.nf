@@ -7,6 +7,7 @@ workflow COHORT_ANALYSIS{
     filter_column
     filter_mode
     analysis_type
+    exome_size
 
     main:
 
@@ -56,7 +57,7 @@ workflow COHORT_ANALYSIS{
                 filter_mode)
 
     keep_ch = QC_VARIANTS.out.keep_maf.transpose()
-    CALCULATE_SAMPLE_TMB(keep_ch)
+    CALCULATE_SAMPLE_TMB(keep_ch, exome_size)
 
 
 

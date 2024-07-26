@@ -16,6 +16,7 @@ workflow {
     baitset            = file(params.baitset, checkIfExists: true)
     metadata           = Channel.fromPath(params.metadata_manifest, checkIfExists: true)
     
+
     caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs)
     | map {file -> tuple([sample_id: file.simpleName, 
                           caller: "caveman", 
@@ -39,7 +40,8 @@ workflow {
             params.genome_build,
             params.filtering_column,
             params.filter_option,
-            "all")
+            "all",
+            params.exome_size)
     
     // if (!isEmpty(unique_pairs)){
     ANALYSE_OTPP(PROCESS_VCFS.out.all_files, 
@@ -47,7 +49,8 @@ workflow {
                 params.genome_build,
                 params.filtering_column,
                 params.filter_option,
-                "one_tumor_per_patient")
+                "one_tumor_per_patient",
+                params.exome_size)
     // }
 
     // if (!isEmpty(independent_tumors)){
@@ -56,7 +59,8 @@ workflow {
                         params.genome_build,
                         params.filtering_column,
                         params.filter_option,
-                        "independent")
+                        "independent",
+                        params.exome_size)
                         // }
 
 }
