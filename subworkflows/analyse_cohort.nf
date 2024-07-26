@@ -1,4 +1,6 @@
-include { QC_VARIANTS; CALCULATE_SAMPLE_TMB } from "../modules/filter_variants.nf"
+include { QC_VARIANTS } from "../modules/filter_variants.nf"
+include { CALCULATE_SAMPLE_TMB } from "../modules/calculate_tmb.nf"
+
 workflow COHORT_ANALYSIS{
     take: 
     vcf_ch
@@ -7,6 +9,7 @@ workflow COHORT_ANALYSIS{
     filter_column
     filter_mode
     analysis_type
+    exome_size
 
     main:
 
@@ -55,8 +58,8 @@ workflow COHORT_ANALYSIS{
                 filter_column, 
                 filter_mode)
 
-    QC_VARIANTS.out.keep_maf.map{ file -> tuple([analysis_type: analysis_type], file)}
-    // CALCULATE_SAMPLE_TMB()
+    keep_ch = QC_VARIANTS.out.keep_maf.transpose()
+    CALCULATE_SAMPLE_TMB(keep_ch, exome_size)
 
 
 

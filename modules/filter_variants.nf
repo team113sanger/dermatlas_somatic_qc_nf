@@ -58,7 +58,7 @@ process ADD_COMMON_ANNOTATIONS {
 
 
 process QC_VARIANTS {
-    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf/feature/dockerise:3511b8f1"
+    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf:0.5.1"
     publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
     
     input:
@@ -78,7 +78,7 @@ process QC_VARIANTS {
     script:
     def f = "${meta.analysis_type}"
     """
-    /opt/repo/qc_somatic_variants.sh \
+    /opt/repo/somatic_variants_qc.sh \
     -l $file_list \
     -m caveman_pindel_${f}.maf \
     -s /opt/repo \
@@ -93,23 +93,3 @@ process QC_VARIANTS {
     """
 }
 
-
-process CALCULATE_SAMPLE_TMB {
-    publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}/plots_${file_id}", mode: params.publish_dir_mode
-    input:
-    tuple val(meta), path(maf_file)
-
-    output:
-    path("mutations_per_Mb.tsv"), emit: tmb
-
-    shell:
-    file_id = maf_file.name.split("caveman")[0]
-    """
-    sample_ids="\$(cut -f 11 !{maf_file} | grep PD | sort -u)"
-    for sample in "\${sample_ids}"; do 
-        echo -ne "\${sample}\t"; muts="\$(grep "\${sample}" !{maf_file} | cut -f 4,5 |sort -u|wc -l)"; echo "\${muts}/48.225157" | bc -l;
-    done > mutations_per_Mb.tsv;
-    echo !{file_id}
-    """
-
-}
