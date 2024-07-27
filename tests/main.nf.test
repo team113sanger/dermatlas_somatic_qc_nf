@@ -1,0 +1,36 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf"
+    script "main.nf"
+
+    test("Fully configured workflow should run without failures") {
+
+        when {
+        params {
+            load("$baseDir/tests/testdata/test_params.json")
+        }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.succeeded().size() == 3
+        }
+
+    }
+
+    test("Missing cohort files should change the number of processes") {
+
+        when {
+        params {
+            load("$baseDir/tests/testdata/no_optional.json")
+        }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.succeeded().size() == 3
+        }
+
+    }
+
+}
