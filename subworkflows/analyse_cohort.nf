@@ -1,5 +1,6 @@
 include { QC_VARIANTS } from "../modules/filter_variants.nf"
-include { CALCULATE_SAMPLE_TMB; MAF_TO_EXCEL } from "../modules/calculate_tmb.nf"
+include { CALCULATE_SAMPLE_TMB } from "../modules/calculate_tmb.nf"
+include { MAF_TO_EXCEL } from "../modules/maf_to_excel.nf"
 
 workflow COHORT_ANALYSIS{
     take: 

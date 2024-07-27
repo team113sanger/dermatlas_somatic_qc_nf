@@ -1,15 +1,12 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl = 2
 include { PROCESS_VCFS } from "./subworkflows/process_vcfs.nf"
-include { COHORT_ANALYSIS as ANALYSE_OTPP} from "./subworkflows/analyse_cohort.nf"
-include { COHORT_ANALYSIS as ANALYSE_INDEPENDENT} from "./subworkflows/analyse_cohort.nf"
-include { COHORT_ANALYSIS as ANALYSE_ALL} from "./subworkflows/analyse_cohort.nf"
+include { COHORT_ANALYSIS as ONE_TUMOR_PER_PATIENT} from "./subworkflows/analyse_cohort.nf"
+include { COHORT_ANALYSIS as INDEPENDENT_TUMORS} from "./subworkflows/analyse_cohort.nf"
+include { COHORT_ANALYSIS as ALL_TUMORS} from "./subworkflows/analyse_cohort.nf"
 
 workflow {
-    
-    all_pairs          = Channel.fromPath(params.tumor_normal_pairs, checkIfExists: true)
-    unique_pairs       = Channel.fromPath(params.one_per_patient, checkIfExists: true)
-    independent_tumors = Channel.fromPath(params.independent, checkIfExists: true)
+
     patient_md         = Channel.fromPath(params.metadata_manifest, checkIfExists: true)
     dbsnp_vars         = file(params.dbsnp_variants, checkIfExists: true)
     dbsnp_header       = file(params.dbsnp_header, checkIfExists: true)
@@ -35,33 +32,41 @@ workflow {
                  dbsnp_vars,
                  dbsnp_header)
 
-    ANALYSE_ALL(PROCESS_VCFS.out.all_files, 
+    if (params.all_samples){
+    all_pairs = Channel.fromPath(params.all_samples, checkIfExists: true)
+    
+    ALL_TUMORS(PROCESS_VCFS.out.all_files, 
             all_pairs,
             params.genome_build,
             params.filtering_column,
             params.filter_option,
             "all",
             params.exome_size)
+    }
+
+    if( params.one_per_patient) {
+    unique_pairs = Channel.fromPath(params.one_per_patient, checkIfExists: true)
     
-    // if (!isEmpty(unique_pairs)){
-    ANALYSE_OTPP(PROCESS_VCFS.out.all_files, 
+    ONE_TUMOR_PER_PATIENT(PROCESS_VCFS.out.all_files, 
                 unique_pairs,
                 params.genome_build,
                 params.filtering_column,
                 params.filter_option,
                 "one_tumor_per_patient",
                 params.exome_size)
-    // }
+    }
 
-    // if (!isEmpty(independent_tumors)){
-    ANALYSE_INDEPENDENT(PROCESS_VCFS.out.all_files, 
+    if( params.independent) {
+    independent_tumors = Channel.fromPath(params.independent, checkIfExists: true)
+    
+    INDEPENDENT_TUMORS(PROCESS_VCFS.out.all_files, 
                         independent_tumors,
                         params.genome_build,
                         params.filtering_column,
                         params.filter_option,
                         "independent",
                         params.exome_size)
-                        // }
+    }
 
 }
 

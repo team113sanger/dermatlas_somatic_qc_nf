@@ -3,7 +3,7 @@
         "content": [
             {
                 "0": [
-                    "example.maf.xlsx:md5,cb20774deb3cf130038b738bb3191856"
+                    "example.maf.xlsx:md5,6ddebbbe80e15f0ce1a195476b9a2106"
                 ]
             }
         ],
@@ -11,6 +11,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-27T14:46:54.456156"
+        "timestamp": "2024-07-27T15:43:01.034548"
     }
 }
