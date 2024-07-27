@@ -1,5 +1,5 @@
 include { QC_VARIANTS } from "../modules/filter_variants.nf"
-include { CALCULATE_SAMPLE_TMB } from "../modules/calculate_tmb.nf"
+include { CALCULATE_SAMPLE_TMB; MAF_TO_EXCEL } from "../modules/calculate_tmb.nf"
 
 workflow COHORT_ANALYSIS{
     take: 
@@ -60,8 +60,6 @@ workflow COHORT_ANALYSIS{
 
     keep_ch = QC_VARIANTS.out.keep_maf.transpose()
     CALCULATE_SAMPLE_TMB(keep_ch, exome_size)
-
-
-
+    MAF_TO_EXCEL(keep_ch)
 
 }
