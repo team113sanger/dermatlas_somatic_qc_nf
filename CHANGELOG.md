@@ -5,19 +5,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Todo
-- Support for tsv -> .xlsx conversion is still required
 - Make a variant release
+- BCFtools container reversion to minimise differences `bcftools:1.20`
 
-# 0.2.0
+# 0.3.0 [July 2024]
+### Added
+- Support for tsv -> .xlsx conversion
+- Optional exectuion of independent/one tumor per patient/all sample analyses
+
+# 0.2.0 [July 2024]
 ### Added
 - Calculate and output tumour mutation burden
 - Harmonised script name inside and outside of container (MAF) added here
 
-# 0.1.1
+# 0.1.1 [July 2024]
 ### Changed
 - Update readme for reliable Farm singularity
 
-# 0.1.0
+# 0.1.0 [June 2024]
 ### Changed
 - BCFtools container changed to `bcftools:1.20` for dockerising steps.
 
