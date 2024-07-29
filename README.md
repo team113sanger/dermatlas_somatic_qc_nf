@@ -11,8 +11,12 @@ dermatlas_mafqc_nf is a bioinfromatics pipeline written in [Nextflow](http://www
 ## Pipeline summary
 
 In brief, the pipeline takes a set samples that have been pre-processed by the Dermatlas ingestion pipeline and then:
-- Links each sample vcf to it's assocaited metadata and then links tumor-normal pairs.
-
+- Links each sample vcf to it's assocaited metadata.
+- Filters `PASS` variants from the file
+- Adds an annotation field to those filtered variants in dbSNP 
+- Performs Dermatlas variant QC and generates diagnostic plots 
+- Calculates the TMB of `keep` samples produced by Dermatlas variant QC
+- Creates `.xlsx` file outputs from mafs for releasing to project scientists
 ## Inputs 
 
 ### Cohort-dependent variables
@@ -20,15 +24,16 @@ In brief, the pipeline takes a set samples that have been pre-processed by the D
 - `caveman_vcfs`: path to a set of Caveman vcf files (using **.vcf expansion)
 - `pindel_vcfs`: path to a set of Pindel vcf files (using **.vcf expansion)
 - `metadata_manifest`: path to a tab-delimited manifest containing sample PD IDs and information about sample phenotype/preparation.
-- `tumor_normal_pairs`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
-- `one_per_patient`: path to a file containing a tab-delimited list of matched tumour-normal pairs with one patient selected per-tumor.
-- `independent`: path to a file containing a tab-delimited list of matched tumour-normal pairs with all independent comparisons to perform.
 - `cohort_prefix`: Prefix to add to outputs
 - `PROJECTDIR`: Deprecated Project dir variable from when relative paths were important (use `.`)
 - `exome_size`: Size in Mb of the baitset (for Dermatlas `48.225157`)
 - `outdir`: Directory to publish results 
 - `release_version`: Directory to release results into within outdir (e.g.`release_v1`)
 
+**Optional**
+- `all_samples`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
+- `one_per_patient`: path to a file containing a tab-delimited list of matched tumour-normal pairs with one patient selected per-tumor.
+- `independent`: path to a file containing a tab-delimited list of matched tumour-normal pairs with all independent comparisons to perform.
 
 
 ### Cohort-independent variables
@@ -43,7 +48,7 @@ Default reference file values supplied within the `nextflow.config` file can be 
 
 ## Usage 
 
-The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 0.2.0`)  and the `.json` parameter file supplied for a run.
+The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 0.3.0`)  and the `.json` parameter file supplied for a run.
 
 An example wrapper script:
 ```
@@ -65,7 +70,7 @@ module load /software/team113/modules/modulefiles/tw/0.6.2
 # Create a nextflow job that will spawn other jobs
 
 nextflow run 'https://gitlab.internal.sanger.ac.uk/DERMATLAS/analysis-methods/dermatlas_mafqc_nf' \
--r 0.2.0 \
+-r 0.3.0 \
 -params-file $PARAMS_FILE \
 -c nextflow.config \
 -profile farm22 
