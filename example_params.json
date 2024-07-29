@@ -10,10 +10,10 @@
     "filter_option": "filter2",
     "release_version": "release_v1",
     "outdir": "results",
+    "all_samples": "tests/testdata/all_matched_pairs.tsv",
     "one_per_patient": "tests/testdata/one_per_patient_pairs.tsv",
     "independent": "tests/testdata/independent_pairs.tsv",
     "cohort_prefix": "6674_6675_Angioleiomyoma",
-    "tumor_normal_pairs": "tests/testdata/all_matched_pairs.tsv",
     "metadata_manifest": "tests/testdata/metadata_tab.tsv",
     "exome_size": 48.225157
 }

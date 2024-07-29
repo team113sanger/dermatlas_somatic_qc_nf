@@ -14,6 +14,68 @@
                 "input"
             ],
     "properties": {
+        "caveman_vcfs" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "pindel_vcfs" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "baitset" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "PROJECTDIR" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "dbsnp_variants" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "dbsnp_header" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "genome_build" : {
+            "type": "string"
+        },
+        "filtering_column" : {
+            "type": "string"
+        },
+        "filter_option" : {
+            "type": "string"
+        },
+        "release_version" : {
+            "type": "string"
+        },
+        "outdir" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "all_samples" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "one_per_patient" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "independent" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "cohort_prefix" : {
+            "type": "string"
+        },
+        "metadata_manifest" : {
+            "type": "string", 
+            "format": "file-path"
+        },
+        "exome_size" : {
+            "type": "string"
+        }
     }}
 
 }}
