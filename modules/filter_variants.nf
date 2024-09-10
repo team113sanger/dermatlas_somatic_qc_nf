@@ -58,7 +58,7 @@ process ADD_COMMON_ANNOTATIONS {
 
 
 process QC_VARIANTS {
-    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf:0.5.1"
+    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf:0.5.2"
     publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
     
     input:
