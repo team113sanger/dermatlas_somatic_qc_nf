@@ -1,5 +1,6 @@
 
 process CALCULATE_SAMPLE_TMB {
+    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/qc/feature/ci:d4c15802"
     publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}/plots_${file_id}", mode: params.publish_dir_mode
     input:
     tuple val(meta), path(maf_file)
