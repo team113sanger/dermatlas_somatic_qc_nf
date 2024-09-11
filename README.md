@@ -92,6 +92,8 @@ The pipeline can configured to run on either Sanger OpenStack secure-lustre inst
 
 ## Pipeline visualisation 
 Created using nextflow's in-built visualitation features.
+```nextflow run main.nf -preview -with-dag -params-file tests/testdata/test_params.json flowchart.mmd```
+
 ```mermaid
 flowchart TB
 subgraph " "
