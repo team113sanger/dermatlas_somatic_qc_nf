@@ -34,6 +34,7 @@ In brief, the pipeline takes a set samples that have been pre-processed by the D
 - `all_samples`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
 - `one_per_patient`: path to a file containing a tab-delimited list of matched tumour-normal pairs with one patient selected per-tumor.
 - `independent`: path to a file containing a tab-delimited list of matched tumour-normal pairs with all independent comparisons to perform.
+- `alternative_transcripts`: path to a file containing a tab-delimited list of gene symbol - transcript Id pairs for correcting the transcript considered canonical.
 
 
 ### Cohort-independent variables
