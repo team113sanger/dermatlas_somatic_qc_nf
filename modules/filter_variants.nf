@@ -68,6 +68,7 @@ process QC_VARIANTS {
     val(BUILD)
     val(AF_COL)
     val(filter)
+    path(alternative_transcripts)
 
     output: 
     tuple val(meta), path("pass*.maf"), emit: pass_maf
@@ -77,6 +78,7 @@ process QC_VARIANTS {
 
     script:
     def f = "${meta.analysis_type}"
+    def use_alt = alternative_transcripts.name != "NO_FILE" ? "-t $alternative_transcripts": ''
     """
     /opt/repo/somatic_variants_qc.sh \
     -l $file_list \
@@ -84,8 +86,10 @@ process QC_VARIANTS {
     -s /opt \
     -b $BUILD \
     -a $AF_COL \
-    -f $filter
+    -f $filter \
+    $use_alt
     """
+
     stub: 
     """
     echo stub > test.maf

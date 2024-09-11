@@ -41,7 +41,8 @@ workflow {
             params.filtering_column,
             params.filter_option,
             "all",
-            params.exome_size)
+            params.exome_size,
+            params.alternative_transcripts)
     }
 
     if( params.one_per_patient) {
@@ -53,7 +54,8 @@ workflow {
                 params.filtering_column,
                 params.filter_option,
                 "one_tumor_per_patient",
-                params.exome_size)
+                params.exome_size,
+                params.alternative_transcripts)
     }
 
     if( params.independent) {
@@ -65,7 +67,8 @@ workflow {
                         params.filtering_column,
                         params.filter_option,
                         "independent",
-                        params.exome_size)
+                        params.exome_size,
+                        params.alternative_transcripts)
     }
 
 }
