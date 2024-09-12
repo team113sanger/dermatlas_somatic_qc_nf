@@ -4,9 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Todo
-- Make a variant release
-- BCFtools container reversion to minimise differences `bcftools:1.20`
+## ToDo
+- Creation of sample lists from the manifest?
+- Make a variant release? 
+- BCFtools docker container reversion on secure-lustre to minimise differences (`bcftools:1.20` ->`bcftools:1.9`) Tabix requirement makes life difficult
+
+# 0.4.0 [September 11th 2024]
+### Added
+- Fixes to the container conflicts caused by QC/MAF cross calling 
+- Added support for alternative canonical transcript labels 
+- Corrected to use same module call whilst on farm22 as previously
 
 # 0.3.0 [July 2024]
 ### Added
