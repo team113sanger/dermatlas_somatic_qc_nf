@@ -58,7 +58,7 @@ process ADD_COMMON_ANNOTATIONS {
 
 
 process QC_VARIANTS {
-    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf:0.5.1"
+    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/qc/feature/ci:d4c15802"
     publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
     
     input:
@@ -68,6 +68,7 @@ process QC_VARIANTS {
     val(BUILD)
     val(AF_COL)
     val(filter)
+    path(alternative_transcripts)
 
     output: 
     tuple val(meta), path("pass*.maf"), emit: pass_maf
@@ -77,15 +78,18 @@ process QC_VARIANTS {
 
     script:
     def f = "${meta.analysis_type}"
+    def use_alt = alternative_transcripts.name != "NO_FILE" ? "-t $alternative_transcripts": ''
     """
     /opt/repo/somatic_variants_qc.sh \
     -l $file_list \
     -m caveman_pindel_${f}.maf \
-    -s /opt/repo \
+    -s /opt \
     -b $BUILD \
     -a $AF_COL \
-    -f $filter
+    -f $filter \
+    $use_alt
     """
+
     stub: 
     """
     echo stub > test.maf
