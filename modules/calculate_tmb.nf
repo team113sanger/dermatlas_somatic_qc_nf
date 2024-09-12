@@ -1,5 +1,6 @@
 
 process CALCULATE_SAMPLE_TMB {
+    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/qc/feature/ci:d4c15802"
     publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}/plots_${file_id}", mode: params.publish_dir_mode
     input:
     tuple val(meta), path(maf_file)
@@ -17,23 +18,6 @@ process CALCULATE_SAMPLE_TMB {
         muts="\$(grep "\${sample}" !{maf_file} | cut -f 4,5 | sort -u | wc -l )"
         echo "\${muts}/!{exome_size}" | bc -l >> mutations_per_Mb.tsv
     done 
-    """
-
-}
-
-process MAF_TO_EXCEL {
-    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/maf:0.5.1"
-    publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
-    
-    input: 
-    tuple val(meta), path(maf)
-
-    output: 
-    path("*.xlsx")
-
-    script:
-    """
-    Rscript /opt/repo/maf2xlsx.R $maf
     """
 
 }

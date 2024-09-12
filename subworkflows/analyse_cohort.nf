@@ -11,6 +11,7 @@ workflow COHORT_ANALYSIS{
     filter_mode
     analysis_type
     exome_size
+    alternative_transcripts
 
     main:
 
@@ -51,13 +52,13 @@ workflow COHORT_ANALYSIS{
         [filename, basenames + ".gz\n"]} 
     | set { file_list }
 
-
     QC_VARIANTS(relevant_vcfs,
                 file_list,
                 sample_list, 
                 genome_build, 
                 filter_column, 
-                filter_mode)
+                filter_mode, 
+                alternative_transcripts)
 
     keep_ch = QC_VARIANTS.out.keep_maf.transpose()
     CALCULATE_SAMPLE_TMB(keep_ch, exome_size)
