@@ -19,7 +19,6 @@ include:
 .specific-variables:
   variables:
     USE_DOCKER_TARGET_STAGE: 0
-    # We need to set this to 1 to enable BuildKit as the Dockerfile uses BuildKit features to speed up the build
 
 .specific-tags__secure_lustre_runner:
   variables:
