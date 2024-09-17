@@ -1,0 +1,53 @@
+stages:
+  - test
+
+include:
+# DOCS: https://gitlab.internal.sanger.ac.uk/team113sanger/common/cicd-template/-/blob/develop/README.md
+  - project: 'team113sanger/common/cicd-template'
+    ref: 0.3.4
+    file: '.gitlab-ci-components.yml'
+
+#############
+# TEMPLATES #
+#############
+
+.generic-wo-script-or-rules-or-tags:
+  extends:
+    - .component-variables
+    - .component-before_script
+    - .component-after_script
+
+.specific-variables:
+  variables:
+    USE_DOCKER_TARGET_STAGE: 0
+    # We need to set this to 1 to enable BuildKit as the Dockerfile uses BuildKit features to speed up the build
+
+.specific-tags__secure_lustre_runner:
+  variables:
+    # Custom runner is a shell runner with the following tags
+    USE_DOCKER_IN_DOCKER: 0
+  tags:
+    - team113-secure-lustre-runner
+
+############
+#   JOBS   #
+############
+
+unit-test:
+  stage: test
+  extends:
+    - .generic-wo-script-or-rules-or-tags
+    - .specific-variables
+    - .component-rules-except-release
+
+secure-lustre-test:
+  stage: test
+  extends:
+    - .generic-wo-script-or-rules-or-tags
+    - .specific-tags__secure_lustre_runner
+    - .specific-variables
+    - .component-rules-except-release
+  script:
+    - nextflow --version
+    - nf-test test
+
