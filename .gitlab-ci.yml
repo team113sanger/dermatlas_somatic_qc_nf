@@ -45,5 +45,4 @@ secure-lustre-test:
     - .specific-variables
     - .component-rules-except-release
   script:
-    - nextflow --version
     - nf-test test
