@@ -2,7 +2,7 @@ stages:
   - test
 
 include:
-# DOCS: https://gitlab.internal.sanger.ac.uk/team113sanger/common/cicd-template/-/blob/develop/README.md
+  # DOCS: https://gitlab.internal.sanger.ac.uk/team113sanger/common/cicd-template/-/blob/develop/README.md
   - project: 'team113sanger/common/cicd-template'
     ref: 0.3.4
     file: '.gitlab-ci-components.yml'
@@ -10,7 +10,6 @@ include:
 #############
 # TEMPLATES #
 #############
-
 .generic-wo-script-or-rules-or-tags:
   extends:
     - .component-variables
@@ -30,9 +29,8 @@ include:
     - team113-secure-lustre-runner
 
 ############
-#   JOBS   #
+# JOBS #
 ############
-
 unit-test:
   stage: test
   extends:
@@ -50,4 +48,3 @@ secure-lustre-test:
   script:
     - nextflow --version
     - nf-test test
-
