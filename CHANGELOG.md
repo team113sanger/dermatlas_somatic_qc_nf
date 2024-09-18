@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make a variant release? 
 - BCFtools docker container reversion on secure-lustre to minimise differences (`bcftools:1.20` ->`bcftools:1.9`) Tabix requirement makes life difficult
 
+# 0.5.0 [September 18th 2024]
+### Added
+- A CI running on secure lustre for nf-test
+### Changed
+- Tests updated for the new CI.
+
 # 0.4.0 [September 11th 2024]
 ### Added
 - Fixes to the container conflicts caused by QC/MAF cross calling 
