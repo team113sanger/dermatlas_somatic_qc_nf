@@ -29,7 +29,9 @@ include:
     # does not have sudo. By default CICD jobs do not build with 'docker
     # compose' but use 'docker' - so this is just a safety measure.
     HAS_SUDO: 0
-    FILES_TO_CLEANUP: ".nextflow;.nf-test"
+    NEXTFLOW_DIR: ".nextflow"
+    NF_TEST_DIR: ".nf-test"
+    FILES_TO_CLEANUP: "NEXTFLOW_DIR;NF_TEST_DIR;"
 
 .specific-tags__secure_lustre_runner:
   variables:
