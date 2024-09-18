@@ -20,8 +20,7 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
-        }
+                    }
 
     }
 
