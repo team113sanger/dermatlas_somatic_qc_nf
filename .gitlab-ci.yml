@@ -28,7 +28,6 @@ include:
     # compose' but use 'docker' - so this is just a safety measure.
     HAS_SUDO: 0
 
-
 .specific-tags__secure_lustre_runner:
   variables:
     # Custom runner is a shell runner with the following tags
@@ -39,8 +38,6 @@ include:
 ############
 #   JOBS   #
 ############
-
-
 secure-lustre-test:
   stage: test
   extends:
@@ -52,19 +49,3 @@ secure-lustre-test:
     - nextflow --version
     - nf-test test
 
-publish-develop:
-  stage: publish
-  extends:
-    - .generic-wo-script-or-rules-or-tags
-    - .specific-variables
-    - .component-script-publish-develop-docker-image
-    - .component-rules-develop-only
-
-
-publish-tagged_and_latest_docker_images:
-  stage: publish
-  extends:
-    - .generic-wo-script-or-rules-or-tags
-    - .specific-variables
-    - .component-script-publish-tagged+latest-docker-image
-    - .component-rules-tag-only
