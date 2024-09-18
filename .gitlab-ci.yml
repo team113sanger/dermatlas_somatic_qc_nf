@@ -7,6 +7,8 @@ include:
     ref: 0.3.4
     file: ".gitlab-ci-components.yml"
 
+
+
 #############
 # TEMPLATES #
 #############
@@ -27,6 +29,7 @@ include:
     # does not have sudo. By default CICD jobs do not build with 'docker
     # compose' but use 'docker' - so this is just a safety measure.
     HAS_SUDO: 0
+    FILES_TO_CLEANUP: ".nextflow;.nf-test"
 
 .specific-tags__secure_lustre_runner:
   variables:
