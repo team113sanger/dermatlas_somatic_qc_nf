@@ -12,7 +12,7 @@ nextflow_process {
         }
             process {
                 """
-                input[0] = tuple([sample_id: "PD54555a", caller: "caveman"], 
+                input[0] = tuple([sample_id: "PD54555a", caller: "caveman", filename: "TBC", vcfoutdir: "here"], 
                                  file("/lustre/scratch124/jb63/mafqc/caveman_files/PD54555a/PD54555a.smartphase.vep.vcf.gz"))
                 input[1] = file("${params.baitset}")
                 """

@@ -6,27 +6,12 @@
                     [
                         {
                             "sample_id": "PD54555a",
-                            "caller": [
-                                [
-                                    "PD54555a.filt.vcf.gz:md5,712d17002b923025ea3b8217536f6079",
-                                    "PD54555a.filt.vcf.gz.tbi:md5,ae87bd4847e2ee6028288e7f5ffd53ac"
-                                ],
-                                [
-                                    "PD54556a.filt.vcf.gz:md5,5668282c302bceaef63a5a74950b8ee8",
-                                    "PD54556a.filt.vcf.gz.tbi:md5,072ac6c7801c9204cebab8a4a26e1f46"
-                                ],
-                                [
-                                    "PD54557a.filt.vcf.gz:md5,1140309e6ad9052d272371fd2a6ec922",
-                                    "PD54557a.filt.vcf.gz.tbi:md5,84678be53e42369799dcd7522ff11833"
-                                ],
-                                [
-                                    "PD54558a.filt.vcf.gz:md5,a0387b3e07e6678873244588d140a879",
-                                    "PD54558a.filt.vcf.gz.tbi:md5,bd1e40317dfc95b23cdef67635d762b1"
-                                ]
-                            ]
+                            "caller": "caveman",
+                            "filename": "TBC",
+                            "vcfoutdir": "here"
                         },
-                        "PD54555a.filt.vcf.gz:md5,dc8077b123c8e7dc3948631f6d2cf490",
-                        "PD54555a.filt.vcf.gz.tbi:md5,a224e16fc048581de986b74f7cd1cdeb"
+                        "TBC.filt.vcf.gz:md5,fab19d63172d204a1acf2a87c6b55e00",
+                        "TBC.filt.vcf.gz.tbi:md5,4f6a4e304a650f46eeab8da86a92cb15"
                     ]
                 ]
             }
@@ -35,6 +20,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-06-18T11:59:34.184893"
+        "timestamp": "2024-09-18T11:05:48.711408"
     }
 }
