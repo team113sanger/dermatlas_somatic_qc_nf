@@ -2,10 +2,10 @@ stages:
   - test
 
 include:
-# DOCS: https://gitlab.internal.sanger.ac.uk/team113sanger/common/cicd-template/-/blob/develop/README.md
-  - project: 'team113sanger/common/cicd-template'
+  # DOCS: https://gitlab.internal.sanger.ac.uk/team113sanger/common/cicd-template/-/blob/develop/README.md
+  - project: "team113sanger/common/cicd-template"
     ref: 0.3.4
-    file: '.gitlab-ci-components.yml'
+    file: ".gitlab-ci-components.yml"
 
 #############
 # TEMPLATES #
@@ -46,6 +46,20 @@ secure-lustre-test:
     - .specific-variables
     - .component-rules-except-release
   script:
-    - nextflow --version
+    #
+    # DEBUG INFO ONLY
+    #
+    - echo "PATH=$PATH"
+    - which $SHELL
+    - java -version
+    - javac -version
+    - nextflow -version
+    - nf-test version
+    - which java
+    - which javac
+    - which nextflow
+    - which nf-test
+    #
+    # MAIN
+    #
     - nf-test test
-
