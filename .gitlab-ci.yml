@@ -41,8 +41,6 @@ include:
 ############
 
 
-
-
 secure-lustre-test:
   stage: test
   extends:
