@@ -64,6 +64,8 @@ secure-lustre-test:
     - which javac
     - which nextflow
     - which nf-test
+    - pwd
+    - ls
     #
     # MAIN
     #
