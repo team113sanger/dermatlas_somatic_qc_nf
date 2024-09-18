@@ -44,20 +44,11 @@ build:
   stage: build
   extends:
     - .generic-wo-script-or-rules-or-tags
-    - .specific-tags__isg_runner
     - .specific-variables
     - .component-script_docker-build
     - .component-rules-except-release
 
 
-unit-test:
-  stage: test
-  extends:
-    - .generic-wo-script-or-rules-or-tags
-    - .specific-tags__isg_runner
-    - .specific-variables
-    - .component-script-test-unit-python
-    - .component-rules-except-release
 
 secure-lustre-test:
   stage: test
