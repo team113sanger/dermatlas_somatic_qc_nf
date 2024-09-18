@@ -40,13 +40,6 @@ include:
 #   JOBS   #
 ############
 
-build:
-  stage: build
-  extends:
-    - .generic-wo-script-or-rules-or-tags
-    - .specific-variables
-    - .component-script_docker-build
-    - .component-rules-except-release
 
 
 
