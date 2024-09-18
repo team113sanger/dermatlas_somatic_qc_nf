@@ -65,7 +65,6 @@ publish-develop:
   stage: publish
   extends:
     - .generic-wo-script-or-rules-or-tags
-    - .specific-tags__isg_runner
     - .specific-variables
     - .component-script-publish-develop-docker-image
     - .component-rules-develop-only
@@ -75,7 +74,6 @@ publish-tagged_and_latest_docker_images:
   stage: publish
   extends:
     - .generic-wo-script-or-rules-or-tags
-    - .specific-tags__isg_runner
     - .specific-variables
     - .component-script-publish-tagged+latest-docker-image
     - .component-rules-tag-only
