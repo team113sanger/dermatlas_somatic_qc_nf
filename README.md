@@ -1,4 +1,4 @@
-# dermatlas_mafqc_nf
+# dermatlas_somatic_qc_nf
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.04.5-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
@@ -6,7 +6,7 @@
 
 ## Introduction
 
-dermatlas_mafqc_nf is a bioinfromatics pipeline written in [Nextflow](http://www.nextflow.io) for performing processing and QC on somatic variant calls from cohorts of tumors within the Dermatlas project. 
+dermatlas_somatic_qc_nf is a bioinfromatics pipeline written in [Nextflow](http://www.nextflow.io) for performing processing and QC on somatic variant calls from cohorts of tumors within the Dermatlas project. 
 
 ## Pipeline summary
 

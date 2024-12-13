@@ -1,6 +1,6 @@
 services:
-  dermatlas_mafqc_nf:
-    container_name: dermatlas_mafqc_nf
+  dermatlas_somatic_qc_nf:
+    container_name: dermatlas_somatic_qc_nf
     user: admin
     image: project:local
     build:
