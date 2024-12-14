@@ -13,7 +13,7 @@ nextflow_pipeline {
 
         then {
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 91
+            assert workflow.trace.succeeded().size() == 99
         }
 
     }
@@ -28,7 +28,7 @@ nextflow_pipeline {
 
         then {
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 41
+            assert workflow.trace.succeeded().size() == 49
         }
 
     }
