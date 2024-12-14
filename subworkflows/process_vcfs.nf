@@ -1,4 +1,4 @@
-include { FILTER_PASS_VARIANTS; ADD_COMMON_ANNOTATIONS } from "../modules/filter_variants.nf"
+include { FILTER_PASS_VARIANTS; INDEX_PASS_VARIANTS; ADD_COMMON_ANNOTATIONS } from "../modules/filter_variants.nf"
 
 workflow PROCESS_VCFS {
     take:
@@ -14,7 +14,8 @@ workflow PROCESS_VCFS {
     | set { raw_vcfs }
 
     FILTER_PASS_VARIANTS(raw_vcfs, baitset)
-    ADD_COMMON_ANNOTATIONS(FILTER_PASS_VARIANTS.out, 
+    INDEX_PASS_VARIANTS(FILTER_PASS_VARIANTS.out)
+    ADD_COMMON_ANNOTATIONS(INDEX_PASS_VARIANTS.out, 
                            dbsnp_vars, 
                            dbsnp_header)
     ADD_COMMON_ANNOTATIONS.out.collect(flat: false)

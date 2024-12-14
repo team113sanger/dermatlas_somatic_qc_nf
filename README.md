@@ -6,16 +6,16 @@
 
 ## Introduction
 
-dermatlas_somatic_qc_nf is a bioinfromatics pipeline written in [Nextflow](http://www.nextflow.io) for performing processing and QC on somatic variant calls from cohorts of tumors within the Dermatlas project. 
+dermatlas_somatic_qc_nf is a bioinformatics pipeline written in [Nextflow](http://www.nextflow.io) for performing processing and QC on somatic variant calls from cohorts of tumors within the Dermatlas project. 
 
 ## Pipeline summary
 
-In brief, the pipeline takes a set samples that have been pre-processed by the Dermatlas ingestion pipeline and then:
-- Links each sample vcf to it's assocaited metadata.
-- Filters `PASS` variants from the file
-- Adds an annotation field to those filtered variants in dbSNP 
-- Performs Dermatlas variant QC and generates diagnostic plots 
-- Calculates the TMB of `keep` samples produced by Dermatlas variant QC
+In brief, the pipeline takes a set samples that have been pre-processed by the Dermatlas ingestion pipeline (Caveman and Pindel VCF files) and then:
+- Links each sample vcf to it's associated metadata.
+- Filters `PASS` variants from the file.
+- Adds an annotation field to filtered variants present in dbSNP 
+- Performs Dermatlas variant QC and generates Dermatlas diagnostic plots 
+- Calculates the TMB of Dermatlas `keep` samples produced by Dermatlas variant QC
 - Creates `.xlsx` file outputs from mafs for releasing to project scientists
 ## Inputs 
 
@@ -24,26 +24,25 @@ In brief, the pipeline takes a set samples that have been pre-processed by the D
 - `caveman_vcfs`: path to a set of Caveman vcf files (using **.vcf expansion)
 - `pindel_vcfs`: path to a set of Pindel vcf files (using **.vcf expansion)
 - `metadata_manifest`: path to a tab-delimited manifest containing sample PD IDs and information about sample phenotype/preparation.
-- `cohort_prefix`: Prefix to add to outputs
-- `PROJECTDIR`: Deprecated Project dir variable from when relative paths were important (use `.`)
-- `exome_size`: Size in Mb of the baitset (for Dermatlas `48.225157`)
+- `cohort_prefix`: Prefix to add to output file names
+- `exome_size`: Size in Mb of the baitset (for the Dermatlas this is `48.225157`)
 - `outdir`: Directory to publish results 
-- `release_version`: Directory to release results into within outdir (e.g.`release_v1`)
+- `release_version`: Directory to release results into within an output directory (e.g.`release_v1`)
 
 **Optional**
 - `all_samples`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
 - `one_per_patient`: path to a file containing a tab-delimited list of matched tumour-normal pairs with one patient selected per-tumor.
 - `independent`: path to a file containing a tab-delimited list of matched tumour-normal pairs with all independent comparisons to perform.
-- `alternative_transcripts`: path to a file containing a tab-delimited list of gene symbol - transcript Id pairs for correcting the transcript considered canonical.
+- `alternative_transcripts`: path to a file containing a tab-delimited list of HUGO gene symbol - transcript ID pairs for correcting the transcript considered canonical.
 
 
 ### Cohort-independent variables
-Reference files that are reused across pipeline executions have been placed within the pipeline's default `nextflow.config` file to simplify configuration and can be ommited from setup. Behind the scences though, the following reference files are required for a run: 
-- `dbsnp_variants`: path to DBSNP vcf file adn it's tbi index file (`dbSNP155_common.tsv.gz{,.tbi}`)
-- `dbsnp_header`: Path to a file containing dbsnp header info
-- `genome_build`: Genome build string (`GRCh38`)
-- `filtering_column`: Column within vcf to use in filtering likely germline vars (`gnomAD_AF`)
-- `filter_option`: String to determine how outputs are filtered (One of filter1, filter2)
+Reference files that are reused across pipeline executions have been placed within the pipeline's default `nextflow.config` file to simplify configuration and can be ommited from setup. Behind the scences, the following reference files are required for a run: 
+- `dbsnp_variants`: path to DBSNP vcf file and it's tbi index file (`dbSNP155_common.tsv.gz{,.tbi}`)
+- `dbsnp_header`: Path to a file detailing dbsnp header info
+- `genome_build`: Genome build string (`GRCh38`) to use in somatic QC steps
+- `filtering_column`: Column within VCF to use in filtering likely germline variants (default: `gnomAD_AF`)
+- `filter_option`: String to determine the mode of filter applied to variants (One of `filter1` or `filter2`)
 
 Default reference file values supplied within the `nextflow.config` file can be overided by adding them to the params `.json` file. An example complete params file `example_params.json` is supplied within this repo for demonstation.
 
@@ -55,11 +54,11 @@ An example wrapper script:
 ```
 #!/bin/bash
 #BSUB -q normal
-#BSUB -G team113
+#BSUB -G team113-grps
 #BSUB -R "select[mem>8000] rusage[mem=8000] span[hosts=1]"
 #BSUB -M 8000
-#BSUB -oo nf_out.o
-#BSUB -eo nf_out.e
+#BSUB -oo nf_out%J.o
+#BSUB -eo nf_out%J.e
 
 PARAMS_FILE="/lustre/scratch125/casm/team113da/users/jb63/nf_cna_testing/params.json"
 
