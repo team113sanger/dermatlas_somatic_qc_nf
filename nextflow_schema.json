@@ -26,10 +26,6 @@
             "type": "string", 
             "format": "file-path"
         },
-        "PROJECTDIR" : {
-            "type": "string", 
-            "format": "file-path"
-        },
         "dbsnp_variants" : {
             "type": "string", 
             "format": "file-path"
