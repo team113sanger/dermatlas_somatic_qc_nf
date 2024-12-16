@@ -10,13 +10,14 @@ dermatlas_somatic_qc_nf is a bioinformatics pipeline written in [Nextflow](http:
 
 ## Pipeline summary
 
-In brief, the pipeline takes a set samples that have been pre-processed by the Dermatlas ingestion pipeline (Caveman and Pindel VCF files) and then:
+In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples – which have been pre-processed by the Dermatlas ingestion pipeline – and then:
 - Links each sample vcf to it's associated metadata.
 - Filters `PASS` variants from the file.
-- Adds an annotation field to filtered variants present in dbSNP 
-- Performs Dermatlas variant QC and generates Dermatlas diagnostic plots 
-- Calculates the TMB of Dermatlas `keep` samples produced by Dermatlas variant QC
+- Adds an annotation field to variants present in dbSNP 
+- Performs Dermatlas variant-QC and generates Dermatlas diagnostic plots 
+- Calculates the TMB of Dermatlas `keep` samples produced by Dermatlas variant-QC
 - Creates `.xlsx` file outputs from mafs for releasing to project scientists
+
 ## Inputs 
 
 ### Cohort-dependent variables
