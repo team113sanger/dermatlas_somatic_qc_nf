@@ -7,6 +7,9 @@ nextflow_process {
     test("Should run without failures") {
 
         when {
+        params {
+            load("$baseDir/tests/testdata/test_params.json")
+        }
             process {
                 """
                 input[0] = tuple([empty: 'test'], file("$baseDir/tests/testdata/example_maf.maf"))

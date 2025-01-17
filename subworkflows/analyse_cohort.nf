@@ -63,5 +63,8 @@ workflow COHORT_ANALYSIS{
     keep_ch = QC_VARIANTS.out.keep_maf.transpose()
     CALCULATE_SAMPLE_TMB(keep_ch, exome_size)
     MAF_TO_EXCEL(keep_ch)
+    
+    emit: 
+    output_variants = QC_VARIANTS.out.keep_maf
 
 }

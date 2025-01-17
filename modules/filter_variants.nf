@@ -1,25 +1,44 @@
 process FILTER_PASS_VARIANTS {
     publishDir "${meta.vcf_outdir}/${meta.sample_id}", mode: params.publish_dir_mode
-    container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
+    container "quay.io/biocontainers/bcftools:1.9--ha228f0b_4"
     
     input: 
     tuple val(meta), path(vcf)
     path(bedfile)
 
     output: 
-    tuple val(meta), path("*.filt.vcf.gz"), path("*.tbi")
+    tuple val(meta), path("*.filt.vcf.gz")
     
     script:
     def vcfout = "$meta.filename"
     """
     bcftools view -f PASS -O z -o ${vcfout}.filt.vcf.gz -T $bedfile $vcf
-    tabix -p vcf ${vcfout}.filt.vcf.gz
     """
     
     stub: 
     """
     echo stub > test.vcf
-    echo stub > test.vcf.tbi
+    """
+
+}
+
+process INDEX_PASS_VARIANTS {
+    publishDir "${meta.vcf_outdir}/${meta.sample_id}", mode: params.publish_dir_mode
+    container "quay.io/biocontainers/tabix:1.11--hdfd78af_0"
+    
+    input: 
+    tuple val(meta), path(vcf)
+
+    output:
+    tuple val(meta), path(vcf), path("*.tbi")
+
+    script:
+    """
+    tabix -p vcf ${vcf}
+    """
+    stub:
+    """
+    echo stub > test_vcf.gz.tbi
     """
 
 }
@@ -58,7 +77,7 @@ process ADD_COMMON_ANNOTATIONS {
 
 
 process QC_VARIANTS {
-    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/qc/feature/ci:d4c15802"
+    container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/qc:0.5.0"
     publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
     
     input:

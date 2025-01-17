@@ -8,8 +8,7 @@ nextflow_process {
 
         when {
             params {
-                // define parameters here. Example:
-                release_version = "v1"
+                load("$baseDir/tests/testdata/test_params.json")
             }
             process {
             """

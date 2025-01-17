@@ -1,0 +1,32 @@
+{
+    "All-tumour process yields VCF with expected variants": {
+        "content": [
+            [
+                [
+                    {
+                        "analysis_type": "all"
+                    },
+                    [
+                        "keepPA_caveman_pindel_all.maf:md5,501bbcd9aa75865b890466b34f64169a",
+                        "keepPA_matched_caveman_pindel_all.maf:md5,501bbcd9aa75865b890466b34f64169a",
+                        "keepPA_vaf_filt_caveman_pindel_all.maf:md5,960f5bc11a3c783267283f02831436e2",
+                        "keepPA_vaf_filt_matched_caveman_pindel_all.maf:md5,960f5bc11a3c783267283f02831436e2",
+                        "keepPA_vaf_size_filt_caveman_pindel_all.maf:md5,4f6ff6251191e096ed4912c467d78724",
+                        "keepPA_vaf_size_filt_matched_caveman_pindel_all.maf:md5,4f6ff6251191e096ed4912c467d78724",
+                        "keep_caveman_pindel_all.maf:md5,dc83d70d3140b55682b11fd1eae1e7d0",
+                        "keep_matched_caveman_pindel_all.maf:md5,dc83d70d3140b55682b11fd1eae1e7d0",
+                        "keep_vaf_filt_caveman_pindel_all.maf:md5,f3bdf938808f7ea64bc789feb9c92a7f",
+                        "keep_vaf_filt_matched_caveman_pindel_all.maf:md5,f3bdf938808f7ea64bc789feb9c92a7f",
+                        "keep_vaf_size_filt_caveman_pindel_all.maf:md5,a8f87adc7dc585749500459ec35cbd1b",
+                        "keep_vaf_size_filt_matched_caveman_pindel_all.maf:md5,a8f87adc7dc585749500459ec35cbd1b"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2025-01-16T10:05:38.782388"
+    }
+}
