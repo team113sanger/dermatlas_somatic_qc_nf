@@ -55,26 +55,24 @@ The recommended way to launch this pipeline is using a wrapper script (e.g. `bsu
 An example wrapper script:
 ```
 #!/bin/bash
-#BSUB -q normal
+#BSUB -q oversubscribed
 #BSUB -G team113-grp
 #BSUB -R "select[mem>8000] rusage[mem=8000] span[hosts=1]"
 #BSUB -M 8000
-#BSUB -oo analysis/logs/somatic_variants_pipeline%J.o
-#BSUB -eo analysis/logs/somatic_variants_pipeline%J.e
+#BSUB -oo logs/somatic_variants_pipeline%J.o
+#BSUB -eo logs/somatic_variants_pipeline%J.e
 
-PARAMS_FILE="/lustre/scratch125/casm/team113da/users/jb63/nf_cna_testing/params.json"
+PARAMS_FILE="/lustre/scratch125/casm/team113da/users/jb63/home/ubuntu/projects/dermatlas_somatic_qc_nf/example_params.json"
 
 # Load module dependencies
 module load nextflow-23.10.0
 module load /software/modules/ISG/singularity/3.11.4
-module load /software/team113/modules/modulefiles/tw/0.6.2
 
 # Create a nextflow job that will spawn other jobs
 
 nextflow run 'https://gitlab.internal.sanger.ac.uk/DERMATLAS/analysis-methods/dermatlas_mafqc_nf' \
 -r 0.5.3 \
 -params-file $PARAMS_FILE \
--c nextflow.config \
 -profile farm22 
 ```
 
