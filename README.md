@@ -55,11 +55,11 @@ An example wrapper script:
 ```
 #!/bin/bash
 #BSUB -q normal
-#BSUB -G team113-grps
+#BSUB -G team113-grp
 #BSUB -R "select[mem>8000] rusage[mem=8000] span[hosts=1]"
 #BSUB -M 8000
-#BSUB -oo nf_out%J.o
-#BSUB -eo nf_out%J.e
+#BSUB -oo analysis/logs/somatic_variants_pipeline%J.o
+#BSUB -eo analysis/logs/somatic_variants_pipeline%J.e
 
 PARAMS_FILE="/lustre/scratch125/casm/team113da/users/jb63/nf_cna_testing/params.json"
 
@@ -71,7 +71,7 @@ module load /software/team113/modules/modulefiles/tw/0.6.2
 # Create a nextflow job that will spawn other jobs
 
 nextflow run 'https://gitlab.internal.sanger.ac.uk/DERMATLAS/analysis-methods/dermatlas_mafqc_nf' \
--r 0.5.0 \
+-r 0.5.3 \
 -params-file $PARAMS_FILE \
 -c nextflow.config \
 -profile farm22 
