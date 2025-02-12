@@ -14,6 +14,8 @@
     "one_per_patient": "/lustre/scratch125/casm/team113da/projects/dermatlas_pu8_project_dir/6935_3051_DERMATLAS_Hidradenocarcinoma_WES/metadata/6935_3051-one_tumour_per_patient_all_tum.txt",
     "independent": "/lustre/scratch125/casm/team113da/projects/dermatlas_pu8_project_dir/6935_3051_DERMATLAS_Hidradenocarcinoma_WES/metadata/6935_3051-independent_tumours_all.tsv",
     "cohort_prefix": "6935_3051_Hidradenocarcinoma",
-    "metadata_manifest": "lustre/scratch125/casm/team113da/projects/dermatlas_pu8_project_dir/6935_3051_DERMATLAS_Hidradenocarcinoma_WES/metadata/6935-biosample-manifest-completed.tsv",
-    "exome_size": 48.225157
+    "metadata_manifest": "/lustre/scratch125/casm/team113da/projects/dermatlas_pu8_project_dir/6935_3051_DERMATLAS_Hidradenocarcinoma_WES/metadata/6935-biosample-manifest-completed.tsv",
+    "exome_size": 48.225157,
+    "alternative_transcripts": "/lustre/scratch125/casm/team113da/projects/dermatlas_pu8_project_dir/resources/ensembl/dermatlas_noncanonical_transcripts_ens103.tsv"
+
 }
