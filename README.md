@@ -26,9 +26,10 @@ In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples 
 - `pindel_vcfs`: path to a set of Pindel vcf files (using **.vcf expansion)
 - `metadata_manifest`: path to a tab-delimited manifest containing sample PD IDs and information about sample phenotype/preparation.
 - `cohort_prefix`: Prefix to add to output file names
-- `exome_size`: Size in Mb of the baitset (for the Dermatlas this is `48.225157`)
+- `exome_size`: Size in Mb of the baitset (for Dermatlas this is `48.225157`)
 - `outdir`: Directory to publish results 
-- `release_version`: Directory to release results into within an output directory (e.g.`release_v1`)
+- `vcf_outdir`: Directory to publish the results of variant processing to match Dermatlas conventions (typically the `analysis` dir for a publishable unit).
+- `release_version`: Directory to release results into within an output directory (e.g.`version1`)
 
 **Optional**
 - `all_samples`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
@@ -78,14 +79,10 @@ nextflow run 'https://gitlab.internal.sanger.ac.uk/DERMATLAS/analysis-methods/de
 ```
 
 
-When running the pipeline for the first time on the farm you will need to provide credentials to pull singularity containers from the team113 sanger gitlab. These should be provided as environment variables:
-`SINGULARITY_DOCKER_USERNAME`=userid@sanger.ac.uk
-`SINGULARITY_DOCKER_PASSWORD`=YOUR_GITLAB_LOGIN_PASSWORD
-
-You can fix these variables to load by default by adding the following lines to your `~/.bashrc` file
+When running the pipeline for the first time on the farm you will need to provide credentials to pull singularity containers from the team113 sanger gitlab. You should be able to do this by running
 ```
-export SINGULARITY_DOCKER_USERNAME=userid@sanger.ac.uk
-export SINGULARITY_DOCKER_PASSWORD=YOUR_GITLAB_LOGIN_PASSWORD
+module load singularity/3.11.4 
+singularity remote login --username $(whoami) docker://gitlab-registry.internal.sanger.ac.uk
 ```
 
 The pipeline can configured to run on either Sanger OpenStack secure-lustre instances or farm22 by changing the profile speicified:
