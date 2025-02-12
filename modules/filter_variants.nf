@@ -94,7 +94,7 @@ process QC_VARIANTS {
     tuple val(meta), path("voi*.maf"), emit: voi_maf
     tuple val(meta), path("keep*.maf"), emit: keep_maf
     tuple val(meta), path("plots*"), emit: plot_dirs
-    tuple val(meta), path(".tsv"), emit: qc_tsv
+    tuple val(meta), path("*.tsv"), emit: qc_tsv
 
 
     script:
