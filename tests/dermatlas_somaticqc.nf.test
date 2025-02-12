@@ -1,0 +1,21 @@
+nextflow_workflow {
+
+    name "Test workflow output"
+    script "main.nf"
+    workflow "DERMATLAS_SOMATIC_VARIANT_QC"
+
+    test("All-tumour process yields VCF with expected variants") {
+
+        when {
+        params {
+            load("${baseDir}/tests/testdata/test_params.json")
+        }
+        }
+
+        then {
+            assert snapshot(workflow.out.all_ch).match()
+            
+        }
+
+    }
+}

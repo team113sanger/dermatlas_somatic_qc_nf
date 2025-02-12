@@ -5,7 +5,7 @@ include { COHORT_ANALYSIS as ONE_TUMOR_PER_PATIENT} from "./subworkflows/analyse
 include { COHORT_ANALYSIS as INDEPENDENT_TUMORS} from "./subworkflows/analyse_cohort.nf"
 include { COHORT_ANALYSIS as ALL_TUMORS} from "./subworkflows/analyse_cohort.nf"
 
-workflow {
+workflow DERMATLAS_SOMATIC_VARIANT_QC {
 
     patient_md         = Channel.fromPath(params.metadata_manifest, checkIfExists: true)
     dbsnp_vars         = file(params.dbsnp_variants, checkIfExists: true)
@@ -70,9 +70,12 @@ workflow {
                         params.exome_size,
                         params.alternative_transcripts)
     }
-
+    emit: 
+    all_ch = ALL_TUMORS.out.output_variants
 }
 
-
+workflow {
+    DERMATLAS_SOMATIC_VARIANT_QC()
+}
 
 

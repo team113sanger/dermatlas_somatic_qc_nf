@@ -11,11 +11,11 @@
     "outdir": "results",
     "caveman_outdir": "results/caveman",
     "pindel_outdir": "results/pindel",
-    "one_per_patient": "$baseDir/tests/testdata/one_tumor_per_patient_pairs.tsv",
-    "independent": "$baseDir/tests/testdata/independent_pairs.tsv",
+    "one_per_patient": "${baseDir}/tests/testdata/one_tumor_per_patient_pairs.tsv",
+    "independent": "${baseDir}/tests/testdata/independent_pairs.tsv",
     "cohort_prefix": "6674_6675_Angioleiomyoma",
-    "all_samples": "$baseDir/tests/testdata/all_matched_pairs.tsv",
-    "metadata_manifest": "$baseDir/tests/testdata/metadata_tab.tsv",
+    "all_samples": "${baseDir}/tests/testdata/all_matched_pairs.tsv",
+    "metadata_manifest": "${baseDir}/tests/testdata/metadata_tab.tsv",
     "exome_size": 48.225157,
-    "alternative_transcripts": "$baseDir/tests/testdata/dermatlas_noncanonical_transcripts_ens103.tsv"
+    "alternative_transcripts": "${baseDir}/tests/testdata/dermatlas_noncanonical_transcripts_ens103.tsv"
 }

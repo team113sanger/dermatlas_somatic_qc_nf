@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Creation of sample lists from the manifest?
 - Make a variant release? 
 
+
+# 0.5.2 [December 13th 2024]
+### Changed
+- Fixes for pulling from a pipeline address and intergation testing.
+
 # 0.5.1 [December 13th 2024]
 ### Changed
 - Updated pipeline name and docs to better reflect what it does
