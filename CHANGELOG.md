@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make a variant release? 
 
 
+# 0.6.0 [February 12th 2025]
+### Fixed
+- Omission of sample_matched and other kinds of file lists from QC step. 
+- Documentation updates to ensure things work smoothly around existing Dermatlas manual QC.
+- Fixed publication directory for log 
+
+
 # 0.5.2 [December 13th 2024]
 ### Changed
 - Fixes for pulling from a pipeline address and intergation testing.
