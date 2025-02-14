@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make a variant release? 
 
 
+# 0.6.1 [February 14th 2025]
+### Changed
+- Updated QC to fix AF filtering for alternative transcripts
+
 # 0.6.0 [February 12th 2025]
 ### Fixed
 - Omission of sample_matched and other kinds of file lists from QC step. 
