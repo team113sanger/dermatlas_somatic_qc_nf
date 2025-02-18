@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make a variant release? 
 
 
+
+# 0.6.2 [February 14th 2025]
+### Changed
+- Typo in OPPT to correct publication with MAF release scripts
+
 # 0.6.1 [February 14th 2025]
 ### Changed
 - Updated QC to fix AF filtering for alternative transcripts
