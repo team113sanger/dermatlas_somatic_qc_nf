@@ -53,7 +53,7 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
                 params.genome_build,
                 params.filtering_column,
                 params.filter_option,
-                "one_tumour_per_patient",
+                "onePerPatient",
                 params.exome_size,
                 params.alternative_transcripts)
     }
