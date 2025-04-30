@@ -13,6 +13,6 @@
     "pindel_outdir": "results/pindel",
     "cohort_prefix": "6674_6675_Angioleiomyoma",
     "all_samples": "$baseDir/tests/testdata/all_matched_pairs.tsv",
-    "metadata_manifest": "$baseDir/tests/testdata/metadata_tab.tsv",
+    "metadata_manifest": "/lustre/scratch124/nf-test/somatic_mutations/metadata_tab.tsv",
     "exome_size": 48.225157
 }
