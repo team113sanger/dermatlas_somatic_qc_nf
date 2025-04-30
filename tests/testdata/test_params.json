@@ -1,6 +1,6 @@
 {
-    "caveman_vcfs": "/lustre/scratch124/jb63/mafqc/caveman_files/**.smartphase.vep.vcf.gz",
-    "pindel_vcfs": "/lustre/scratch124/jb63/mafqc/pindel_files/**.pindel.vep.vcf.gz",
+    "caveman_vcfs": "/lustre/scratch124/nf-test/somatic_mutations/caveman_files/**.smartphase.vep.vcf.gz",
+    "pindel_vcfs": "/lustre/scratch124/nf-test/somatic_mutations/pindel_files/**.pindel.vep.vcf.gz",
     "baitset": "/lustre/scratch124/resources/dermatlas/GRCh38_WES5_canonical_pad100.merged.bed",
     "dbsnp_variants": "/lustre/scratch124/resources/dermatlas/dbsnp/dbSNP155_common.tsv.gz{,.tbi}",
     "dbsnp_header": "/lustre/scratch124/resources/dermatlas/dbsnp/addheader.txt",
