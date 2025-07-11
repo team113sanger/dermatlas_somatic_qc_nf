@@ -12,9 +12,9 @@ dermatlas_somatic_qc_nf is a bioinformatics pipeline written in [Nextflow](http:
 
 In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples – which have been pre-processed by the Dermatlas ingestion pipeline – and then:
 - Links each sample vcf to it's associated metadata.
-- Filters `PASS` variants from the file.
-- Adds an annotation field to variants present in dbSNP 
-- Performs Dermatlas variant-QC and generates Dermatlas diagnostic plots 
+- Filters `PASS` variants flagged by Caveman/Pindel from a variant set.
+- Annotates variants that present in dbSNP 
+- Performs Dermatlas variant-QC, variant filtering, and generates Dermatlas diagnostic plots 
 - Calculates the TMB of Dermatlas `keep` samples produced by Dermatlas variant-QC
 - Creates `.xlsx` file outputs from mafs for releasing to project scientists
 
@@ -24,7 +24,11 @@ In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples 
 
 - `caveman_vcfs`: path to a set of Caveman vcf files (using **.vcf expansion)
 - `pindel_vcfs`: path to a set of Pindel vcf files (using **.vcf expansion)
-- `metadata_manifest`: path to a tab-delimited manifest containing sample PD IDs and information about sample phenotype/preparation.
+- `metadata_manifest`: path to a tab-delimited manifest containing information about sample phenotype and preparation. Required columns and allowed values are:
+    - Sex: M or F
+    - Sanger_DNA_ID: PDID of the sample (e.g. PD001234)
+    - OK_to_analyse_DNA?: Y or N
+    - Phenotype: T or N
 - `cohort_prefix`: Prefix to add to output file names
 - `exome_size`: Size in Mb of the baitset (for Dermatlas this is `48.225157`)
 - `outdir`: Directory to publish results 
@@ -51,7 +55,7 @@ Default reference file values supplied within the `nextflow.config` file can be 
 
 ## Usage 
 
-The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 0.6.0`)  and the `.json` parameter file supplied for a run.
+The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 0.6.2`)  and the `.config` file supplied for a run.
 
 An example wrapper script:
 ```
@@ -60,10 +64,11 @@ An example wrapper script:
 #BSUB -G team113-grp
 #BSUB -R "select[mem>8000] rusage[mem=8000] span[hosts=1]"
 #BSUB -M 8000
-#BSUB -oo logs/somatic_variants_pipeline%J.o
-#BSUB -eo logs/somatic_variants_pipeline%J.e
+#BSUB -oo logs/somatic_variants_pipeline_%J.o
+#BSUB -eo logs/somatic_variants_pipeline_%J.e
 
-PARAMS_FILE="/lustre/scratch125/casm/team113da/users/jb63/home/ubuntu/projects/dermatlas_somatic_qc_nf/example_params.json"
+export CONFIG_FILE="commands/example_config.json"
+export REVISION="0.6.2"
 
 # Load module dependencies
 module load nextflow-23.10.0
@@ -71,9 +76,9 @@ module load /software/modules/ISG/singularity/3.11.4
 
 # Create a nextflow job that will spawn other jobs
 
-nextflow run 'https://gitlab.internal.sanger.ac.uk/DERMATLAS/analysis-methods/dermatlas_mafqc_nf' \
--r 0.6.2 \
--params-file $PARAMS_FILE \
+nextflow run 'https://github.com/team113sanger/dermatlas_somatic_qc_nf' \
+-r ${REVISION} \
+-c ${CONFIG_FILE} \
 -profile farm22 
 ```
 

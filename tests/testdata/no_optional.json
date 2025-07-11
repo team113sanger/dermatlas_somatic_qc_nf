@@ -1,6 +1,6 @@
 {
-    "caveman_vcfs": "/lustre/scratch124/jb63/mafqc/caveman_files/**.smartphase.vep.vcf.gz",
-    "pindel_vcfs": "/lustre/scratch124/jb63/mafqc/pindel_files/**.pindel.vep.vcf.gz",
+    "caveman_vcfs": "/lustre/scratch124/nf-test/somatic_mutations/caveman_files/**.smartphase.vep.vcf.gz",
+    "pindel_vcfs": "/lustre/scratch124/nf-test/somatic_mutations/pindel_files/**.pindel.vep.vcf.gz",
     "baitset": "/lustre/scratch124/resources/dermatlas/GRCh38_WES5_canonical_pad100.merged.bed",
     "dbsnp_variants": "/lustre/scratch124/resources/dermatlas/dbsnp/dbSNP155_common.tsv.gz{,.tbi}",
     "dbsnp_header": "/lustre/scratch124/resources/dermatlas/dbsnp/addheader.txt",
@@ -13,6 +13,6 @@
     "pindel_outdir": "results/pindel",
     "cohort_prefix": "6674_6675_Angioleiomyoma",
     "all_samples": "$baseDir/tests/testdata/all_matched_pairs.tsv",
-    "metadata_manifest": "$baseDir/tests/testdata/metadata_tab.tsv",
+    "metadata_manifest": "/lustre/scratch124/nf-test/somatic_mutations/metadata_tab.tsv",
     "exome_size": 48.225157
 }
