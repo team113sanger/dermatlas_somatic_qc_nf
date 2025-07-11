@@ -8,7 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Creation of sample lists from the manifest?
 - Make a variant release? 
 
-
+# 0.6.3 [July 11th 2025]
+### Changed
+- Updated cacheDir
+- Updated metadata and default paramaters
+- Updated README to use new github repo
+- Fixes to tests
 
 # 0.6.2 [March 11th 2025]
 ### Changed
