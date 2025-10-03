@@ -5,15 +5,27 @@
 #BSUB -M 8000
 
 set -euo pipefail
- 
-source source_me.sh 
- 
+
+source source_me.sh
+
 export REVISION="0.6.3"
- 
+
+# Create isolated pipeline directory
+PIPELINE_DIR="${PROJECT_DIR}/somatic_qc_pipeline"
+mkdir -p "${PIPELINE_DIR}"
+
+# Set isolated Nextflow directories
+export NXF_WORK="${PIPELINE_DIR}/work"
+export NXF_TEMP="${PIPELINE_DIR}/tmp"
+mkdir -p "${NXF_WORK}" "${NXF_TEMP}"
+
 # Load module dependencies
 module load nextflow-23.10.0
 module load /software/modules/ISG/singularity/3.11.4
-  
+
+# Change to pipeline directory so .nextflow.log goes here
+cd "${PIPELINE_DIR}"
+
 # Create a nextflow job that will spawn other jobs
 nextflow pull 'https://github.com/team113sanger/dermatlas_somatic_qc_nf'
 
@@ -21,4 +33,5 @@ nextflow run 'https://github.com/team113sanger/dermatlas_somatic_qc_nf' \
 -resume \
 -r ${REVISION} \
 -c ${PROJECT_DIR}/commands/somatic_variants.config \
--profile farm22
+-profile farm22 \
+-work-dir "${NXF_WORK}"
