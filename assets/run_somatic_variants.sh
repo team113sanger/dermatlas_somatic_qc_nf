@@ -8,10 +8,10 @@ set -euo pipefail
 
 source source_me.sh
 
-export REVISION="0.6.3"
+export REVISION="0.6.4"
 
 # Create isolated pipeline directory
-PIPELINE_DIR="${PROJECT_DIR}/somatic_qc_pipeline"
+PIPELINE_DIR="${PROJECT_DIR}/somatic_pipeline"
 mkdir -p "${PIPELINE_DIR}"
 
 # Set isolated Nextflow directories

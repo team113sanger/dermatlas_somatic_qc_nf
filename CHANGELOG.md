@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Creation of sample lists from the manifest?
 - Make a variant release? 
 
+# 0.6.4 [October 6th 2025]
+### Added
+- Asset file for initialisation with dermanager and multi-pipeline running
+
+
 # 0.6.3 [July 11th 2025]
 ### Changed
 - Updated cacheDir
