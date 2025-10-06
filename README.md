@@ -68,7 +68,7 @@ An example wrapper script:
 #BSUB -eo logs/somatic_variants_pipeline_%J.e
 
 export CONFIG_FILE="commands/example_config.json"
-export REVISION="0.6.2"
+export REVISION="0.6.4"
 
 # Load module dependencies
 module load nextflow-23.10.0
