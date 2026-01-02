@@ -36,7 +36,7 @@ workflow SUBCOHORT_ANALYSIS {
         [meta + [analysis_type: subcohort_name], file, index]
     }
     | set { filtered_vcfs }
-    filtered_vcfs.view()
+
 
     // Group VCFs by subcohort for QC_VARIANTS
     filtered_vcfs
