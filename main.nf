@@ -1,9 +1,7 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl = 2
 include { PROCESS_VCFS } from "./subworkflows/process_vcfs.nf"
-include { COHORT_ANALYSIS as ONE_TUMOR_PER_PATIENT} from "./subworkflows/analyse_cohort.nf"
-include { COHORT_ANALYSIS as INDEPENDENT_TUMORS} from "./subworkflows/analyse_cohort.nf"
-include { COHORT_ANALYSIS as ALL_TUMORS} from "./subworkflows/analyse_cohort.nf"
+include { SUBCOHORT_ANALYSIS } from "./subworkflows/analyse_cohort.nf"
 
 workflow DERMATLAS_SOMATIC_VARIANT_QC {
 
@@ -12,17 +10,17 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
     dbsnp_header       = file(params.dbsnp_header, checkIfExists: true)
     baitset            = file(params.baitset, checkIfExists: true)
     metadata           = Channel.fromPath(params.metadata_manifest, checkIfExists: true)
-    
+
 
     caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs)
-    | map {file -> tuple([sample_id: file.simpleName, 
-                          caller: "caveman", 
+    | map {file -> tuple([sample_id: file.simpleName,
+                          caller: "caveman",
                           filename: file.name.split(".vcf")[0],
                           vcf_outdir: params.caveman_outdir], file)}
 
     pindel_vcf_ch = Channel.fromPath(params.pindel_vcfs)
-    | map {file -> tuple([sample_id: file.simpleName, 
-                          caller: "pindel", 
+    | map {file -> tuple([sample_id: file.simpleName,
+                          caller: "pindel",
                           filename: file.name.split(".vcf")[0],
                           vcf_outdir: params.pindel_outdir], file)}
 
@@ -32,46 +30,29 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
                  dbsnp_vars,
                  dbsnp_header)
 
-    if (params.all_samples){
-    all_pairs = Channel.fromPath(params.all_samples, checkIfExists: true)
-    
-    ALL_TUMORS(PROCESS_VCFS.out.all_files, 
-            all_pairs,
+    if (params.subcohorts) {
+        log.info("Running QC analysis for subcohorts: ${params.subcohorts.keySet().join(', ')}...")
+
+        // Create channel of (subcohort_name, sample_list_file) tuples from params.subcohorts map
+        subcohort_sample_sets = Channel.fromList(
+            params.subcohorts.collect { subcohort, config ->
+                tuple(subcohort, file(config.sample_list, checkIfExists: true))
+            }
+        )
+
+        SUBCOHORT_ANALYSIS(
+            subcohort_sample_sets,
+            PROCESS_VCFS.out.all_files,
             params.genome_build,
             params.filtering_column,
             params.filter_option,
-            "all",
             params.exome_size,
-            params.alternative_transcripts)
+            params.alternative_transcripts
+        )
     }
 
-    if( params.one_per_patient) {
-    unique_pairs = Channel.fromPath(params.one_per_patient, checkIfExists: true)
-    
-    ONE_TUMOR_PER_PATIENT(PROCESS_VCFS.out.all_files, 
-                unique_pairs,
-                params.genome_build,
-                params.filtering_column,
-                params.filter_option,
-                "onePerPatient",
-                params.exome_size,
-                params.alternative_transcripts)
-    }
-
-    if( params.independent) {
-    independent_tumors = Channel.fromPath(params.independent, checkIfExists: true)
-    
-    INDEPENDENT_TUMORS(PROCESS_VCFS.out.all_files, 
-                        independent_tumors,
-                        params.genome_build,
-                        params.filtering_column,
-                        params.filter_option,
-                        "independent",
-                        params.exome_size,
-                        params.alternative_transcripts)
-    }
-    emit: 
-    all_ch = ALL_TUMORS.out.output_variants
+    emit:
+    output_ch = SUBCOHORT_ANALYSIS.out.output_variants
 }
 
 workflow {

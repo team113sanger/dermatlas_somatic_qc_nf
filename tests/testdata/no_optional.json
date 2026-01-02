@@ -4,15 +4,19 @@
     "baitset": "/lustre/scratch124/resources/dermatlas/GRCh38_WES5_canonical_pad100.merged.bed",
     "dbsnp_variants": "/lustre/scratch124/resources/dermatlas/dbsnp/dbSNP155_common.tsv.gz{,.tbi}",
     "dbsnp_header": "/lustre/scratch124/resources/dermatlas/dbsnp/addheader.txt",
-    "genome_build": "GRCh38", 
-    "filtering_column": "gnomAD_AF", 
+    "genome_build": "GRCh38",
+    "filtering_column": "gnomAD_AF",
     "filter_option": "filter2",
     "release_version": "release_v1",
     "outdir": "results",
     "caveman_outdir": "results/caveman",
     "pindel_outdir": "results/pindel",
     "cohort_prefix": "6674_6675_Angioleiomyoma",
-    "all_samples": "$baseDir/tests/testdata/all_matched_pairs.tsv",
     "metadata_manifest": "/lustre/scratch124/nf-test/somatic_mutations/metadata_tab.tsv",
-    "exome_size": 48.225157
+    "exome_size": 48.225157,
+    "subcohorts": {
+        "all": {
+            "sample_list": "$baseDir/tests/testdata/all_matched_pairs.tsv"
+        }
+    }
 }

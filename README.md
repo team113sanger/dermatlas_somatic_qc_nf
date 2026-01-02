@@ -36,14 +36,27 @@ In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples 
 - `pindel_outdir`: Directory to publish the results of variant processing to match Dermatlas conventions (typically the `analysis` dir for a publishable unit).
 - `release_version`: Directory to release results into within an output directory (e.g.`version1`)
 
+**Subcohorts**
+- `subcohorts`: A map of subcohort names to their configuration. Each subcohort entry should have a `sample_list` property pointing to a TSV file containing tumor-normal pairs. Example:
+```groovy
+subcohorts = [
+    "all": [
+        sample_list: "/path/to/all_matched_pairs.tsv"
+    ],
+    "one_per_patient": [
+        sample_list: "/path/to/one_tumour_per_patient_pairs.tsv"
+    ],
+    "independent": [
+        sample_list: "/path/to/independent_pairs.tsv"
+    ]
+]
+```
+
 **Optional**
-- `all_samples`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
-- `one_per_patient`: path to a file containing a tab-delimited list of matched tumour-normal pairs with one tmor selected per-patient.
-- `independent`: path to a file containing a tab-delimited list of matched tumour-normal pairs with all independent comparisons to perform.
 - `alternative_transcripts`: path to a file containing a tab-delimited list of HUGO gene symbol - transcript ID pairs for correcting the transcript considered canonical.
 
 
-### Cohort-independent variables
+### Reference variables
 Reference files that are reused across pipeline executions have been placed within the pipeline's default `nextflow.config` file to simplify configuration and can be ommited from setup. Behind the scences, the following reference files are required for a run: 
 - `dbsnp_variants`: path to DBSNP vcf file and it's `.tbi` index file (`dbSNP155_common.tsv.gz{,.tbi}`)
 - `dbsnp_header`: Path to a file detailing dbsnp header info
