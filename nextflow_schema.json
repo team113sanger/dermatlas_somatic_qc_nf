@@ -50,17 +50,9 @@
             "type": "string", 
             "format": "file-path"
         },
-        "all_samples" : {
-            "type": "string", 
-            "format": "file-path"
-        },
-        "one_per_patient" : {
-            "type": "string", 
-            "format": "file-path"
-        },
-        "independent" : {
-            "type": "string", 
-            "format": "file-path"
+        "subcohorts" : {
+            "type": "object",
+            "description": "Map of subcohort names to their configuration. Each subcohort should have a sample_list property pointing to a TSV file with tumor-normal pairs."
         },
         "cohort_prefix" : {
             "type": "string"

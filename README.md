@@ -36,14 +36,27 @@ In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples 
 - `pindel_outdir`: Directory to publish the results of variant processing to match Dermatlas conventions (typically the `analysis` dir for a publishable unit).
 - `release_version`: Directory to release results into within an output directory (e.g.`version1`)
 
+**Subcohorts**
+- `subcohorts`: A map of subcohort names to their configuration. Each subcohort entry should have a `sample_list` property pointing to a TSV file containing tumor-normal pairs. Example:
+```groovy
+subcohorts = [
+    "all": [
+        sample_list: "/path/to/all_matched_pairs.tsv"
+    ],
+    "one_per_patient": [
+        sample_list: "/path/to/one_tumour_per_patient_pairs.tsv"
+    ],
+    "independent": [
+        sample_list: "/path/to/independent_pairs.tsv"
+    ]
+]
+```
+
 **Optional**
-- `all_samples`: path to a file containing a tab-delimited list of all matched tumour-normal pairs in a cohort.
-- `one_per_patient`: path to a file containing a tab-delimited list of matched tumour-normal pairs with one tmor selected per-patient.
-- `independent`: path to a file containing a tab-delimited list of matched tumour-normal pairs with all independent comparisons to perform.
 - `alternative_transcripts`: path to a file containing a tab-delimited list of HUGO gene symbol - transcript ID pairs for correcting the transcript considered canonical.
 
 
-### Cohort-independent variables
+### Reference variables
 Reference files that are reused across pipeline executions have been placed within the pipeline's default `nextflow.config` file to simplify configuration and can be ommited from setup. Behind the scences, the following reference files are required for a run: 
 - `dbsnp_variants`: path to DBSNP vcf file and it's `.tbi` index file (`dbSNP155_common.tsv.gz{,.tbi}`)
 - `dbsnp_header`: Path to a file detailing dbsnp header info
@@ -92,131 +105,78 @@ singularity remote login --username $(whoami) docker://gitlab-registry.internal.
 The pipeline can configured to run on either Sanger OpenStack secure-lustre instances or farm22 by changing the profile speicified:
 `-profile secure_lustre` or `-profile farm22`. 
 
-## Pipeline visualisation 
-Created using nextflow's in-built visualitation features.
-```nextflow run main.nf -preview -with-dag -params-file tests/testdata/test_params.json flowchart.mmd```
+## Pipeline visualisation
+Created using nextflow's in-built visualisation features.
+```
+nextflow run main.nf -preview -with-dag flowchart.mmd -params-file tests/testdata/test_params.json -c tests/nextflow.config -profile testing -stub
+```
 
 ```mermaid
 flowchart TB
-subgraph " "
+    subgraph " "
     v0["Channel.fromPath"]
     v2["Channel.fromPath"]
     v4["Channel.fromPath"]
-    v6["Channel.fromPath"]
-    v9["bedfile"]
-    v11["dbsnp_vars"]
-    v12["header"]
-    v15["Channel.fromPath"]
+    v7["bedfile"]
+    v10["dbsnp_vars"]
+    v11["header"]
+    v14["Channel.fromList"]
     v32["BUILD"]
     v33["AF_COL"]
     v34["filter"]
-    v40["exome_size"]
-    v45["Channel.fromPath"]
-    v62["BUILD"]
-    v63["AF_COL"]
-    v64["filter"]
-    v70["exome_size"]
-    v75["Channel.fromPath"]
-    v92["BUILD"]
-    v93["AF_COL"]
-    v94["filter"]
-    v100["exome_size"]
+    v35["alternative_transcripts"]
+    v42["exome_size"]
     end
     subgraph " "
-    v1["patient_md"]
-    v3["metadata"]
-    v36[" "]
+    v1["metadata"]
     v37[" "]
     v38[" "]
-    v42[" "]
+    v39[" "]
+    v40[" "]
     v44[" "]
-    v66[" "]
-    v67[" "]
-    v68[" "]
-    v72[" "]
-    v74[" "]
-    v96[" "]
-    v97[" "]
-    v98[" "]
-    v102[" "]
-    v104[" "]
+    v46[" "]
     end
+    subgraph DERMATLAS_SOMATIC_VARIANT_QC
     subgraph PROCESS_VCFS
-    v10([FILTER_PASS_VARIANTS])
-    v13([ADD_COMMON_ANNOTATIONS])
-    v5(( ))
-    v14(( ))
+    v8([FILTER_PASS_VARIANTS])
+    v9([INDEX_PASS_VARIANTS])
+    v12([ADD_COMMON_ANNOTATIONS])
+    v3(( ))
+    v13(( ))
     end
-    subgraph ALL_TUMORS
-    v35([QC_VARIANTS])
-    v41([CALCULATE_SAMPLE_TMB])
-    v43([MAF_TO_EXCEL])
-    v39(( ))
+    subgraph SUBCOHORT_ANALYSIS
+    v36([QC_VARIANTS])
+    v43([CALCULATE_SAMPLE_TMB])
+    v45([MAF_TO_EXCEL])
+    v41(( ))
     end
-    subgraph ONE_TUMOR_PER_PATIENT
-    v65([QC_VARIANTS])
-    v71([CALCULATE_SAMPLE_TMB])
-    v73([MAF_TO_EXCEL])
-    v69(( ))
-    end
-    subgraph INDEPENDENT_TUMORS
-    v95([QC_VARIANTS])
-    v101([CALCULATE_SAMPLE_TMB])
-    v103([MAF_TO_EXCEL])
-    v99(( ))
     end
     v0 --> v1
     v2 --> v3
-    v4 --> v5
-    v6 --> v5
-    v9 --> v10
-    v5 --> v10
-    v10 --> v13
-    v11 --> v13
+    v4 --> v3
+    v7 --> v8
+    v3 --> v8
+    v8 --> v9
+    v9 --> v12
+    v10 --> v12
+    v11 --> v12
     v12 --> v13
-    v13 --> v14
-    v15 --> v14
-    v32 --> v35
-    v33 --> v35
-    v34 --> v35
-    v14 --> v35
-    v35 --> v38
-    v35 --> v37
+    v14 --> v13
+    v32 --> v36
+    v33 --> v36
+    v34 --> v36
     v35 --> v36
-    v35 --> v39
-    v40 --> v41
-    v39 --> v41
-    v41 --> v42
-    v39 --> v43
+    v13 --> v36
+    v36 --> v40
+    v36 --> v39
+    v36 --> v38
+    v36 --> v37
+    v36 --> v41
+    v42 --> v43
+    v41 --> v43
     v43 --> v44
-    v45 --> v14
-    v62 --> v65
-    v63 --> v65
-    v64 --> v65
-    v14 --> v65
-    v65 --> v68
-    v65 --> v67
-    v65 --> v66
-    v65 --> v69
-    v70 --> v71
-    v69 --> v71
-    v71 --> v72
-    v69 --> v73
-    v73 --> v74
-    v75 --> v14
-    v92 --> v95
-    v93 --> v95
-    v94 --> v95
-    v14 --> v95
-    v95 --> v98
-    v95 --> v97
-    v95 --> v96
-    v95 --> v99
-    v100 --> v101
-    v99 --> v101
-    v101 --> v102
-    v99 --> v103
-    v103 --> v104
+    v41 --> v45
+    v45 --> v46
 ```
 
 ## Testing
