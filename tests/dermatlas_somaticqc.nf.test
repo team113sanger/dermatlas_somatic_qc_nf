@@ -13,7 +13,7 @@ nextflow_workflow {
         }
 
         then {
-            assert snapshot(workflow.out.all_ch).match()
+            assert snapshot(workflow.out.output_ch).match()
             
         }
 

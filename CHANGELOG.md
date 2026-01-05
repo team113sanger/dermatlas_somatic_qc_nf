@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## ToDo
-- Creation of sample lists from the manifest?
-- Make a variant release? 
+# 1.0.0 [January 5th 2026]
+### Added
+- Removed opinionated cohort grouping for running on multiple arbitary sample subsets 
+- Updated SOP documentation to build within repository
+
+
+
 
 # 0.6.4 [October 6th 2025]
 ### Added
@@ -16,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # 0.6.3 [July 11th 2025]
 ### Changed
 - Updated cacheDir
-- Updated metadata and default paramaters
+- Updated metadata and default parameters
 - Updated README to use new github repo
 - Fixes to tests
 
@@ -37,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # 0.5.2 [December 13th 2024]
 ### Changed
-- Fixes for pulling from a pipeline address and intergation testing.
+- Fixes for pulling from a pipeline address and integration testing.
 
 # 0.5.1 [December 13th 2024]
 ### Changed
@@ -58,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # 0.3.0 [July 2024]
 ### Added
 - Support for tsv -> .xlsx conversion
-- Optional exectuion of independent/one tumor per patient/all sample analyses
+- Optional execution of independent/one tumor per patient/all sample analyses
 
 # 0.2.0 [July 2024]
 ### Added

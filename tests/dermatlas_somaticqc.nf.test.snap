@@ -7,26 +7,64 @@
                         "analysis_type": "all"
                     },
                     [
-                        "keepPA_caveman_pindel_all.maf:md5,501bbcd9aa75865b890466b34f64169a",
-                        "keepPA_matched_caveman_pindel_all.maf:md5,501bbcd9aa75865b890466b34f64169a",
-                        "keepPA_vaf_filt_caveman_pindel_all.maf:md5,960f5bc11a3c783267283f02831436e2",
-                        "keepPA_vaf_filt_matched_caveman_pindel_all.maf:md5,960f5bc11a3c783267283f02831436e2",
-                        "keepPA_vaf_size_filt_caveman_pindel_all.maf:md5,4f6ff6251191e096ed4912c467d78724",
-                        "keepPA_vaf_size_filt_matched_caveman_pindel_all.maf:md5,4f6ff6251191e096ed4912c467d78724",
-                        "keep_caveman_pindel_all.maf:md5,dc83d70d3140b55682b11fd1eae1e7d0",
-                        "keep_matched_caveman_pindel_all.maf:md5,dc83d70d3140b55682b11fd1eae1e7d0",
-                        "keep_vaf_filt_caveman_pindel_all.maf:md5,f3bdf938808f7ea64bc789feb9c92a7f",
-                        "keep_vaf_filt_matched_caveman_pindel_all.maf:md5,f3bdf938808f7ea64bc789feb9c92a7f",
-                        "keep_vaf_size_filt_caveman_pindel_all.maf:md5,a8f87adc7dc585749500459ec35cbd1b",
-                        "keep_vaf_size_filt_matched_caveman_pindel_all.maf:md5,a8f87adc7dc585749500459ec35cbd1b"
+                        "keepPA_caveman_pindel_all.maf:md5,27ead7712a78226fcd2fcc052eaddbf0",
+                        "keepPA_matched_caveman_pindel_all.maf:md5,27ead7712a78226fcd2fcc052eaddbf0",
+                        "keepPA_vaf_filt_caveman_pindel_all.maf:md5,a6ccbcb5599c43860564d07318c6b62e",
+                        "keepPA_vaf_filt_matched_caveman_pindel_all.maf:md5,a6ccbcb5599c43860564d07318c6b62e",
+                        "keepPA_vaf_size_filt_caveman_pindel_all.maf:md5,b891f8bc56ce3742f040bd7556562712",
+                        "keepPA_vaf_size_filt_matched_caveman_pindel_all.maf:md5,b891f8bc56ce3742f040bd7556562712",
+                        "keep_caveman_pindel_all.maf:md5,ff247336f4883b489308d4a9b3e840f5",
+                        "keep_matched_caveman_pindel_all.maf:md5,ff247336f4883b489308d4a9b3e840f5",
+                        "keep_vaf_filt_caveman_pindel_all.maf:md5,437f94753b220cb6ef3a3281f7a2e298",
+                        "keep_vaf_filt_matched_caveman_pindel_all.maf:md5,437f94753b220cb6ef3a3281f7a2e298",
+                        "keep_vaf_size_filt_caveman_pindel_all.maf:md5,08ae83f003aac63c055a59f426b7c20c",
+                        "keep_vaf_size_filt_matched_caveman_pindel_all.maf:md5,08ae83f003aac63c055a59f426b7c20c"
+                    ]
+                ],
+                [
+                    {
+                        "analysis_type": "independent"
+                    },
+                    [
+                        "keepPA_caveman_pindel_independent.maf:md5,27ead7712a78226fcd2fcc052eaddbf0",
+                        "keepPA_matched_caveman_pindel_independent.maf:md5,27ead7712a78226fcd2fcc052eaddbf0",
+                        "keepPA_vaf_filt_caveman_pindel_independent.maf:md5,a6ccbcb5599c43860564d07318c6b62e",
+                        "keepPA_vaf_filt_matched_caveman_pindel_independent.maf:md5,a6ccbcb5599c43860564d07318c6b62e",
+                        "keepPA_vaf_size_filt_caveman_pindel_independent.maf:md5,b891f8bc56ce3742f040bd7556562712",
+                        "keepPA_vaf_size_filt_matched_caveman_pindel_independent.maf:md5,b891f8bc56ce3742f040bd7556562712",
+                        "keep_caveman_pindel_independent.maf:md5,ff247336f4883b489308d4a9b3e840f5",
+                        "keep_matched_caveman_pindel_independent.maf:md5,ff247336f4883b489308d4a9b3e840f5",
+                        "keep_vaf_filt_caveman_pindel_independent.maf:md5,437f94753b220cb6ef3a3281f7a2e298",
+                        "keep_vaf_filt_matched_caveman_pindel_independent.maf:md5,437f94753b220cb6ef3a3281f7a2e298",
+                        "keep_vaf_size_filt_caveman_pindel_independent.maf:md5,08ae83f003aac63c055a59f426b7c20c",
+                        "keep_vaf_size_filt_matched_caveman_pindel_independent.maf:md5,08ae83f003aac63c055a59f426b7c20c"
+                    ]
+                ],
+                [
+                    {
+                        "analysis_type": "onePerPatient"
+                    },
+                    [
+                        "keepPA_caveman_pindel_onePerPatient.maf:md5,2e0937ea72fefc48f54a6d879041a8c3",
+                        "keepPA_matched_caveman_pindel_onePerPatient.maf:md5,2e0937ea72fefc48f54a6d879041a8c3",
+                        "keepPA_vaf_filt_caveman_pindel_onePerPatient.maf:md5,2a942b6a5649c1b88e5a646033c9d090",
+                        "keepPA_vaf_filt_matched_caveman_pindel_onePerPatient.maf:md5,2a942b6a5649c1b88e5a646033c9d090",
+                        "keepPA_vaf_size_filt_caveman_pindel_onePerPatient.maf:md5,011597fbcd7668eadb0db5f19a839b35",
+                        "keepPA_vaf_size_filt_matched_caveman_pindel_onePerPatient.maf:md5,011597fbcd7668eadb0db5f19a839b35",
+                        "keep_caveman_pindel_onePerPatient.maf:md5,e69270fc12f3fc007feccddd7c85e46b",
+                        "keep_matched_caveman_pindel_onePerPatient.maf:md5,e69270fc12f3fc007feccddd7c85e46b",
+                        "keep_vaf_filt_caveman_pindel_onePerPatient.maf:md5,2ba085b1fe5eb6502dd79776dc8452b9",
+                        "keep_vaf_filt_matched_caveman_pindel_onePerPatient.maf:md5,2ba085b1fe5eb6502dd79776dc8452b9",
+                        "keep_vaf_size_filt_caveman_pindel_onePerPatient.maf:md5,851f197626b9fa385ace98af990c3c9a",
+                        "keep_vaf_size_filt_matched_caveman_pindel_onePerPatient.maf:md5,851f197626b9fa385ace98af990c3c9a"
                     ]
                 ]
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-01-16T10:05:38.782388"
+        "timestamp": "2026-01-05T10:02:25.748911836"
     }
 }
