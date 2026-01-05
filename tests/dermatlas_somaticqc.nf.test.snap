@@ -42,21 +42,21 @@
                 ],
                 [
                     {
-                        "analysis_type": "one_per_patient"
+                        "analysis_type": "onePerPatient"
                     },
                     [
-                        "keepPA_caveman_pindel_one_per_patient.maf:md5,2e0937ea72fefc48f54a6d879041a8c3",
-                        "keepPA_matched_caveman_pindel_one_per_patient.maf:md5,2e0937ea72fefc48f54a6d879041a8c3",
-                        "keepPA_vaf_filt_caveman_pindel_one_per_patient.maf:md5,2a942b6a5649c1b88e5a646033c9d090",
-                        "keepPA_vaf_filt_matched_caveman_pindel_one_per_patient.maf:md5,2a942b6a5649c1b88e5a646033c9d090",
-                        "keepPA_vaf_size_filt_caveman_pindel_one_per_patient.maf:md5,011597fbcd7668eadb0db5f19a839b35",
-                        "keepPA_vaf_size_filt_matched_caveman_pindel_one_per_patient.maf:md5,011597fbcd7668eadb0db5f19a839b35",
-                        "keep_caveman_pindel_one_per_patient.maf:md5,e69270fc12f3fc007feccddd7c85e46b",
-                        "keep_matched_caveman_pindel_one_per_patient.maf:md5,e69270fc12f3fc007feccddd7c85e46b",
-                        "keep_vaf_filt_caveman_pindel_one_per_patient.maf:md5,2ba085b1fe5eb6502dd79776dc8452b9",
-                        "keep_vaf_filt_matched_caveman_pindel_one_per_patient.maf:md5,2ba085b1fe5eb6502dd79776dc8452b9",
-                        "keep_vaf_size_filt_caveman_pindel_one_per_patient.maf:md5,851f197626b9fa385ace98af990c3c9a",
-                        "keep_vaf_size_filt_matched_caveman_pindel_one_per_patient.maf:md5,851f197626b9fa385ace98af990c3c9a"
+                        "keepPA_caveman_pindel_onePerPatient.maf:md5,2e0937ea72fefc48f54a6d879041a8c3",
+                        "keepPA_matched_caveman_pindel_onePerPatient.maf:md5,2e0937ea72fefc48f54a6d879041a8c3",
+                        "keepPA_vaf_filt_caveman_pindel_onePerPatient.maf:md5,2a942b6a5649c1b88e5a646033c9d090",
+                        "keepPA_vaf_filt_matched_caveman_pindel_onePerPatient.maf:md5,2a942b6a5649c1b88e5a646033c9d090",
+                        "keepPA_vaf_size_filt_caveman_pindel_onePerPatient.maf:md5,011597fbcd7668eadb0db5f19a839b35",
+                        "keepPA_vaf_size_filt_matched_caveman_pindel_onePerPatient.maf:md5,011597fbcd7668eadb0db5f19a839b35",
+                        "keep_caveman_pindel_onePerPatient.maf:md5,e69270fc12f3fc007feccddd7c85e46b",
+                        "keep_matched_caveman_pindel_onePerPatient.maf:md5,e69270fc12f3fc007feccddd7c85e46b",
+                        "keep_vaf_filt_caveman_pindel_onePerPatient.maf:md5,2ba085b1fe5eb6502dd79776dc8452b9",
+                        "keep_vaf_filt_matched_caveman_pindel_onePerPatient.maf:md5,2ba085b1fe5eb6502dd79776dc8452b9",
+                        "keep_vaf_size_filt_caveman_pindel_onePerPatient.maf:md5,851f197626b9fa385ace98af990c3c9a",
+                        "keep_vaf_size_filt_matched_caveman_pindel_onePerPatient.maf:md5,851f197626b9fa385ace98af990c3c9a"
                     ]
                 ]
             ]
@@ -65,6 +65,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2026-01-02T13:22:09.797272256"
+        "timestamp": "2026-01-05T10:02:25.748911836"
     }
 }

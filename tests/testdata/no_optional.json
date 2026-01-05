@@ -1,9 +1,9 @@
 {
-    "caveman_vcfs": "/lustre/scratch125/casm/teams/team113/secure-lustre/team113/nf-test/caveman_files/**.smartphase.vep.vcf.gz",
-    "pindel_vcfs": "/lustre/scratch125/casm/teams/team113/secure-lustre/team113/nf-test//pindel_files/**.pindel.vep.vcf.gz",
-    "baitset": "/lustre/scratch125/casm/teams/team113/secure-lustre/team113/nf-test/resources/baitset/GRCh38_WES5_canonical_pad100.merged.bed",
-    "dbsnp_variants": "/lustre/scratch125/casm/teams/team113/secure-lustre/team113/nf-test/resources/dbsnp/dbSNP155_common.tsv.gz{,.tbi}",
-    "dbsnp_header": "/lustre/scratch125/casm/teams/team113/secure-lustre/team113/nf-test/resources/dbsnp/addheader.txt",
+    "caveman_vcfs": "s3://t113-test-artefacts/nf-test/dermatlas_somatic_qc_nf/testdata/caveman_files/**.smartphase.vep.vcf.gz",
+    "pindel_vcfs": "s3://t113-test-artefacts/nf-test/dermatlas_somatic_qc_nf/testdata/pindel_files/**.pindel.vep.vcf.gz",
+    "baitset": "s3://t113-test-artefacts/nf-test/dermatlas_somatic_qc_nf/resources/baitset/GRCh38_WES5_canonical_pad100.merged.bed",
+    "dbsnp_variants": "s3://t113-test-artefacts/nf-test/dermatlas_somatic_qc_nf/resources/dbsnp/dbSNP155_common.tsv.gz{,.tbi}",
+    "dbsnp_header": "s3://t113-test-artefacts/nf-test/dermatlas_somatic_qc_nf/resources/dbsnp/addheader.txt",
     "genome_build": "GRCh38",
     "filtering_column": "gnomAD_AF",
     "filter_option": "filter2",
@@ -12,11 +12,11 @@
     "caveman_outdir": "results/caveman",
     "pindel_outdir": "results/pindel",
     "cohort_prefix": "6674_6675_Angioleiomyoma",
-    "metadata_manifest": "/lustre/scratch125/casm/teams/team113/secure-lustre/team113/nf-test/somatic_variant_qc/6674-biosample-manifest-completed_20240429.tsv",
+    "metadata_manifest": "s3://t113-test-artefacts/nf-test/dermatlas_somatic_qc_nf/testdata/metadata/6674-biosample-manifest-completed_20240429.tsv",
     "exome_size": 48.225157,
     "subcohorts": {
         "all": {
-            "sample_list": "$baseDir/tests/testdata/all_matched_pairs.tsv"
+            "sample_list": "${baseDir}/tests/testdata/all_matched_pairs.tsv"
         }
     }
 }
