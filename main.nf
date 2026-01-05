@@ -5,11 +5,10 @@ include { SUBCOHORT_ANALYSIS } from "./subworkflows/analyse_cohort.nf"
 
 workflow DERMATLAS_SOMATIC_VARIANT_QC {
 
-    patient_md         = Channel.fromPath(params.metadata_manifest, checkIfExists: true)
-    dbsnp_vars         = file(params.dbsnp_variants, checkIfExists: true)
-    dbsnp_header       = file(params.dbsnp_header, checkIfExists: true)
-    baitset            = file(params.baitset, checkIfExists: true)
-    metadata           = Channel.fromPath(params.metadata_manifest, checkIfExists: true)
+    dbsnp_vars   = file(params.dbsnp_variants, checkIfExists: true)
+    dbsnp_header = file(params.dbsnp_header, checkIfExists: true)
+    baitset      = file(params.baitset, checkIfExists: true)
+    metadata     = Channel.fromPath(params.metadata_manifest, checkIfExists: true) // Unused - for future extensions or deprecation
 
 
     caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs)
