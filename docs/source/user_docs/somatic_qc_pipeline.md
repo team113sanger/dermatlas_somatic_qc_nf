@@ -129,7 +129,7 @@ The bsub magic at the start of the wrapper script will send a nextflow "master j
 
 ### Troubleshooting problem nextflow runs:
 
-### There are several reasons the gemline pipeline might fail including bugs in the pipeline; issues with LSF; or misconfiguration.  In most cases (especially when you suspect a farm/ LSF failure), simply re-submitting the pipeline with
+There are several reasons the gemline pipeline might fail including bugs in the pipeline; issues with LSF; or misconfiguration.  In most cases (especially when you suspect a farm/ LSF failure), simply re-submitting the pipeline with
 
 ```bash
 bsub < run_somatic_calling.sh
