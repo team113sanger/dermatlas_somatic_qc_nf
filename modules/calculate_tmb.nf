@@ -12,12 +12,17 @@ process CALCULATE_SAMPLE_TMB {
     shell:
     file_id = maf_file.name.split("_caveman")[0]
     """
+    touch mutations_per_Mb.tsv
     for sample in \$(cut -f 11 !{maf_file} | grep PD | sort -u); do
         echo "Processing sample: \$sample"
         echo -ne "\${sample}\t" >> mutations_per_Mb.tsv
-        muts="\$(grep "\${sample}" !{maf_file} | cut -f 4,5 | sort -u | wc -l )"
-        echo "\${muts}/!{exome_size}" | bc -l >> mutations_per_Mb.tsv
-    done 
+        muts="\$(grep "\${sample}" !{maf_file} | cut -f 4,5 | sort -u | wc -l || true)"
+        if [ "\${muts}" -gt 0 ]; then
+            echo "\${muts}/!{exome_size}" | bc -l >> mutations_per_Mb.tsv
+        else
+            echo "0" >> mutations_per_Mb.tsv
+        fi
+    done
     """
 
 }
