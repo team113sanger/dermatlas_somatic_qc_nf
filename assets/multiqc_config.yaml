@@ -1,0 +1,26 @@
+title: "Dermatlas Somatic Variant QC"
+subtitle: "Custom QC report for somatic variant analysis"
+intro_text: >
+  This report summarises quality control metrics for somatic variant
+  calls processed through the Dermatlas somatic QC pipeline.
+
+report_header_info:
+  - Pipeline: "dermatlas_somatic_qc_nf"
+
+custom_content:
+  order:
+    - tmb
+    - af_vs_depth_snv
+    - af_vs_depth_indel
+    - mutation_types
+    - mutation_types_proportion
+    - gene_tileplot
+    - af_vs_depth_recurrent_genes
+    - af_vs_depth_recurrent_sites
+    - recurrent_genes
+    - recurrent_sites
+
+run_modules:
+  - custom_content
+
+skip_generalstats: true

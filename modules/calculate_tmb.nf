@@ -7,7 +7,7 @@ process CALCULATE_SAMPLE_TMB {
     val(exome_size)
 
     output:
-    path("mutations_per_Mb.tsv"), emit: tmb
+    tuple val(meta), path("mutations_per_Mb.tsv"), emit: tmb
 
     shell:
     file_id = maf_file.name.split("_caveman")[0]

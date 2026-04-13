@@ -1,6 +1,7 @@
 include { QC_VARIANTS } from "../modules/filter_variants.nf"
 include { CALCULATE_SAMPLE_TMB } from "../modules/calculate_tmb.nf"
 include { MAF_TO_EXCEL } from "../modules/maf_to_excel.nf"
+include { MULTIQC } from "../modules/multiqc.nf"
 
 workflow SUBCOHORT_ANALYSIS {
     take:
@@ -98,7 +99,32 @@ workflow SUBCOHORT_ANALYSIS {
     CALCULATE_SAMPLE_TMB(keep_ch, exome_size)
     MAF_TO_EXCEL(keep_ch)
 
+    // Group TMB files by subcohort
+    CALCULATE_SAMPLE_TMB.out.tmb
+        .map { meta, tmb_file -> [meta.analysis_type, tmb_file] }
+        .groupTuple()
+        .set { tmb_by_subcohort }
+
+    // Combine QC TSVs, plot dirs, and TMB files by subcohort for MultiQC
+    QC_VARIANTS.out.qc_tsv
+        .map { meta, tsvs -> [meta.analysis_type, meta, tsvs] }
+        .join(
+            QC_VARIANTS.out.plot_dirs
+                .map { meta, plots -> [meta.analysis_type, plots] }
+        )
+        .join(tmb_by_subcohort)
+        .map { analysis_type, meta, tsvs, plots, tmb_files ->
+            tuple(meta, tsvs, plots, tmb_files)
+        }
+        .set { multiqc_input }
+
+    MULTIQC(
+        multiqc_input,
+        file("${projectDir}/assets/multiqc_config.yaml")
+    )
+
     emit:
     output_variants = QC_VARIANTS.out.keep_maf
+    multiqc_report  = MULTIQC.out.report
 
 }
