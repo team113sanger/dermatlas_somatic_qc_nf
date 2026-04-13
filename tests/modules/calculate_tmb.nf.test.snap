@@ -7,7 +7,7 @@
                         {
                             "empty": "test"
                         },
-                        "mutations_per_Mb.tsv:md5,933d7a1a7a8a90a79f9bf3116338e237"
+                        "example_maf.maf.mutations_per_Mb.tsv:md5,933d7a1a7a8a90a79f9bf3116338e237"
                     ]
                 ],
                 "tmb": [
@@ -15,7 +15,7 @@
                         {
                             "empty": "test"
                         },
-                        "mutations_per_Mb.tsv:md5,933d7a1a7a8a90a79f9bf3116338e237"
+                        "example_maf.maf.mutations_per_Mb.tsv:md5,933d7a1a7a8a90a79f9bf3116338e237"
                     ]
                 ]
             }

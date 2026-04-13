@@ -1,26 +1,26 @@
 
 process CALCULATE_SAMPLE_TMB {
     container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/qc/feature/ci:d4c15802"
-    publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}/plots_${file_id}", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}/plots_${file_id}", mode: params.publish_dir_mode, saveAs: { "mutations_per_Mb.tsv" }
     input:
     tuple val(meta), path(maf_file)
     val(exome_size)
 
     output:
-    tuple val(meta), path("mutations_per_Mb.tsv"), emit: tmb
+    tuple val(meta), path("${file_id}.mutations_per_Mb.tsv"), emit: tmb
 
     shell:
     file_id = maf_file.name.split("_caveman")[0]
     """
-    touch mutations_per_Mb.tsv
+    touch !{file_id}.mutations_per_Mb.tsv
     for sample in \$(cut -f 11 !{maf_file} | grep PD | sort -u); do
         echo "Processing sample: \$sample"
-        echo -ne "\${sample}\t" >> mutations_per_Mb.tsv
+        echo -ne "\${sample}\t" >> !{file_id}.mutations_per_Mb.tsv
         muts="\$(grep "\${sample}" !{maf_file} | cut -f 4,5 | sort -u | wc -l || true)"
         if [ "\${muts}" -gt 0 ]; then
-            echo "\${muts}/!{exome_size}" | bc -l >> mutations_per_Mb.tsv
+            echo "\${muts}/!{exome_size}" | bc -l >> !{file_id}.mutations_per_Mb.tsv
         else
-            echo "0" >> mutations_per_Mb.tsv
+            echo "0" >> !{file_id}.mutations_per_Mb.tsv
         fi
     done
     """
