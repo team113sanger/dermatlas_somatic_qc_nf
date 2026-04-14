@@ -27,6 +27,12 @@ process CONVERT_PLOTS_TO_PNG {
         mkdir -p "\$out"
         for pdf in "\$d"/*.pdf; do
             [ -e "\$pdf" ] || continue
+            [ -s "\$pdf" ] || { echo "skip empty PDF: \$pdf" >&2; continue; }
+            pages=\$(pdfinfo "\$pdf" 2>/dev/null | awk '/^Pages:/ {print \$2}')
+            if [ -z "\$pages" ] || [ "\$pages" -lt 1 ]; then
+                echo "skip 0-page PDF: \$pdf" >&2
+                continue
+            fi
             base=\$(basename "\$pdf" .pdf)
             pdftoppm -png -r 150 -singlefile "\$pdf" "\$out/\$base"
         done
