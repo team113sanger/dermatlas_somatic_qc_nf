@@ -1,6 +1,6 @@
 
 process MULTIQC {
-    container "ewels/multiqc:v1.25.2"
+    container "docker://quay.io/biocontainers/multiqc:1.33--pyhdfd78af_0"
     publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
 
     input:
