@@ -10,7 +10,12 @@ process CONVERT_PLOTS_TO_PNG {
 
     script:
     def allowed = ["plots_keepPA_vaf_size_filt_matched", "plots_keep_vaf_size_filt_matched"]
+    def sub = meta.analysis_type
     """
+    export XDG_CACHE_HOME="\$PWD/.cache"
+    export FONTCONFIG_PATH="\$PWD/.cache/fontconfig"
+    mkdir -p "\$XDG_CACHE_HOME/fontconfig"
+
     mkdir -p png_plots
     for d in ${plot_dirs}; do
         name=\$(basename \$d)
@@ -18,7 +23,7 @@ process CONVERT_PLOTS_TO_PNG {
             ${allowed.join('|')}) ;;
             *) continue ;;
         esac
-        out="png_plots/\$name"
+        out="png_plots/${sub}__\$name"
         mkdir -p "\$out"
         for pdf in "\$d"/*.pdf; do
             [ -e "\$pdf" ] || continue

@@ -106,24 +106,18 @@ workflow SUBCOHORT_ANALYSIS {
         .groupTuple()
         .set { tmb_by_subcohort }
 
-    // Convert PDF plots to PNG in an isolated process (keeps MultiQC container slim)
+    // Convert PDF plots to PNG (subcohort name encoded in output dir prefix)
     CONVERT_PLOTS_TO_PNG(QC_VARIANTS.out.plot_dirs)
 
-    // Combine QC TSVs, plot dirs, and TMB files by subcohort for MultiQC
-    QC_VARIANTS.out.qc_tsv
-        .map { meta, tsvs -> [meta.analysis_type, meta, tsvs] }
-        .join(
-            CONVERT_PLOTS_TO_PNG.out.plot_dirs
-                .map { meta, plots -> [meta.analysis_type, plots] }
-        )
-        .join(tmb_by_subcohort)
-        .map { analysis_type, meta, tsvs, plots, tmb_files ->
-            tuple(meta, tsvs, plots, tmb_files)
-        }
-        .set { multiqc_input }
+    // Collect every subcohort's png dirs into one channel for a single combined report
+    CONVERT_PLOTS_TO_PNG.out.plot_dirs
+        .map { meta, plots -> plots }
+        .flatten()
+        .collect()
+        .set { combined_plot_dirs }
 
     MULTIQC(
-        multiqc_input,
+        combined_plot_dirs,
         file("${projectDir}/assets/multiqc_config.yaml")
     )
 
