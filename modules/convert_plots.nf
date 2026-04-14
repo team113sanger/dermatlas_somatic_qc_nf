@@ -1,6 +1,6 @@
 
 process CONVERT_PLOTS_TO_PNG {
-    container "docker://quay.io/biocontainers/poppler:22.12.0--h091648b_0"
+    container "docker://quay.io/biocontainers/poppler:25.07.0"
 
     input:
     tuple val(meta), path(plot_dirs)
