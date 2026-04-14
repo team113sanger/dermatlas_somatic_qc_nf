@@ -9,8 +9,6 @@ import argparse
 import glob
 import os
 import shutil
-import subprocess
-import sys
 
 
 # Mapping from PDF base name to MultiQC section config
@@ -106,37 +104,13 @@ def prepare_table_tsv(input_path, outdir, section_id, section_name, description)
         shutil.copyfileobj(fin, fout)
 
 
-def convert_pdf_to_png(pdf_path, outdir, section_config):
-    """Convert a PDF plot to PNG and create a companion YAML descriptor."""
-    basename = os.path.splitext(os.path.basename(pdf_path))[0]
-    png_path = os.path.join(outdir, f"{basename}_mqc.png")
+def stage_png(png_path, outdir, section_config):
+    """Stage a pre-converted PNG plot with its MultiQC custom-content descriptor."""
+    basename = os.path.splitext(os.path.basename(png_path))[0]
+    dest_png = os.path.join(outdir, f"{basename}_mqc.png")
     yaml_path = os.path.join(outdir, f"{basename}_mqc.yaml")
 
-    # Try pdftoppm (poppler-utils) first, fall back to ghostscript
-    converted = False
-    if shutil.which("pdftoppm"):
-        result = subprocess.run(
-            ["pdftoppm", "-png", "-r", "150", "-singlefile", pdf_path, png_path.replace(".png", "")],
-            capture_output=True,
-        )
-        if result.returncode == 0:
-            converted = True
-    if not converted and shutil.which("gs"):
-        result = subprocess.run(
-            [
-                "gs", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m",
-                "-r150", f"-sOutputFile={png_path}", pdf_path,
-            ],
-            capture_output=True,
-        )
-        if result.returncode == 0:
-            converted = True
-
-    if not converted:
-        print(f"WARNING: Could not convert {pdf_path} to PNG (no pdftoppm or gs available)", file=sys.stderr)
-        return
-
-    # Write companion YAML descriptor for MultiQC custom content image
+    shutil.copyfile(png_path, dest_png)
     with open(yaml_path, "w") as fh:
         fh.write(f"id: '{section_config['id']}'\n")
         fh.write(f"section_name: '{section_config['section_name']}'\n")
@@ -187,14 +161,14 @@ def main():
                 description="Top recurrently mutated sites across the cohort",
             )
 
-    # 3. Convert PDF plots to PNG
+    # 3. Stage pre-converted PNG plots (PDFs are converted upstream by CONVERT_PLOTS_TO_PNG)
     for plot_dir in args.plot_dirs:
         if not os.path.isdir(plot_dir):
             continue
-        for pdf_file in glob.glob(os.path.join(plot_dir, "*.pdf")):
-            basename = os.path.splitext(os.path.basename(pdf_file))[0]
+        for png_file in glob.glob(os.path.join(plot_dir, "*.png")):
+            basename = os.path.splitext(os.path.basename(png_file))[0]
             if basename in PLOT_SECTIONS:
-                convert_pdf_to_png(pdf_file, args.outdir, PLOT_SECTIONS[basename])
+                stage_png(png_file, args.outdir, PLOT_SECTIONS[basename])
 
 
 if __name__ == "__main__":

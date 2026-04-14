@@ -2,6 +2,7 @@ include { QC_VARIANTS } from "../modules/filter_variants.nf"
 include { CALCULATE_SAMPLE_TMB } from "../modules/calculate_tmb.nf"
 include { MAF_TO_EXCEL } from "../modules/maf_to_excel.nf"
 include { MULTIQC } from "../modules/multiqc.nf"
+include { CONVERT_PLOTS_TO_PNG } from "../modules/convert_plots.nf"
 
 workflow SUBCOHORT_ANALYSIS {
     take:
@@ -105,11 +106,14 @@ workflow SUBCOHORT_ANALYSIS {
         .groupTuple()
         .set { tmb_by_subcohort }
 
+    // Convert PDF plots to PNG in an isolated process (keeps MultiQC container slim)
+    CONVERT_PLOTS_TO_PNG(QC_VARIANTS.out.plot_dirs)
+
     // Combine QC TSVs, plot dirs, and TMB files by subcohort for MultiQC
     QC_VARIANTS.out.qc_tsv
         .map { meta, tsvs -> [meta.analysis_type, meta, tsvs] }
         .join(
-            QC_VARIANTS.out.plot_dirs
+            CONVERT_PLOTS_TO_PNG.out.plot_dirs
                 .map { meta, plots -> [meta.analysis_type, plots] }
         )
         .join(tmb_by_subcohort)
