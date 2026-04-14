@@ -100,11 +100,18 @@ workflow SUBCOHORT_ANALYSIS {
     CALCULATE_SAMPLE_TMB(keep_ch, exome_size)
     MAF_TO_EXCEL(keep_ch)
 
-    // Group TMB files by subcohort
+    // For MultiQC, use only the keep and keepPA TMB files (matches the figures shown)
     CALCULATE_SAMPLE_TMB.out.tmb
-        .map { meta, tmb_file -> [meta.analysis_type, tmb_file] }
-        .groupTuple()
-        .set { tmb_by_subcohort }
+        .filter { meta, tmb ->
+            tmb.name.startsWith("keep_vaf_size_filt_matched") ||
+            tmb.name.startsWith("keepPA_vaf_size_filt_matched")
+        }
+        .collectFile(storeDir: "${workDir}/tmb_by_subcohort") { meta, tmb ->
+            def filter_key = tmb.name.startsWith("keepPA") ? "keepPA" : "keep"
+            [ "${meta.analysis_type}__${filter_key}.tmb.tsv", tmb.text ]
+        }
+        .collect()
+        .set { combined_tmb }
 
     // Convert PDF plots to PNG (subcohort name encoded in output dir prefix)
     CONVERT_PLOTS_TO_PNG(QC_VARIANTS.out.plot_dirs)
@@ -118,6 +125,7 @@ workflow SUBCOHORT_ANALYSIS {
 
     MULTIQC(
         combined_plot_dirs,
+        combined_tmb,
         file("${projectDir}/assets/multiqc_config.yaml")
     )
 
