@@ -104,17 +104,28 @@ def prepare_table_tsv(input_path, outdir, section_id, section_name, description)
         shutil.copyfileobj(fin, fout)
 
 
-def stage_png(png_path, outdir, section_config):
-    """Stage a pre-converted PNG plot with its MultiQC custom-content descriptor."""
+PLOT_DIR_LABELS = {
+    "plots_keep_vaf_size_filt_matched": ("keep", "Keep (all PASS)"),
+    "plots_keepPA_vaf_size_filt_matched": ("keepPA", "KeepPA (protein-altering)"),
+}
+
+
+def stage_png(png_path, outdir, section_config, dir_name):
+    """Stage a pre-converted PNG plot with its MultiQC custom-content descriptor.
+
+    dir_name disambiguates plots that share a basename across plot dirs.
+    """
     basename = os.path.splitext(os.path.basename(png_path))[0]
-    dest_png = os.path.join(outdir, f"{basename}_mqc.png")
-    yaml_path = os.path.join(outdir, f"{basename}_mqc.yaml")
+    suffix, label = PLOT_DIR_LABELS.get(dir_name, (dir_name, dir_name))
+    unique = f"{basename}_{suffix}"
+    dest_png = os.path.join(outdir, f"{unique}_mqc.png")
+    yaml_path = os.path.join(outdir, f"{unique}_mqc.yaml")
 
     shutil.copyfile(png_path, dest_png)
     with open(yaml_path, "w") as fh:
-        fh.write(f"id: '{section_config['id']}'\n")
-        fh.write(f"section_name: '{section_config['section_name']}'\n")
-        fh.write(f"description: '{section_config['description']}'\n")
+        fh.write(f"id: '{section_config['id']}_{suffix}'\n")
+        fh.write(f"section_name: '{section_config['section_name']} — {label}'\n")
+        fh.write(f"description: '{section_config['description']} ({label})'\n")
         fh.write("plot_type: 'image'\n")
 
 
@@ -165,10 +176,11 @@ def main():
     for plot_dir in args.plot_dirs:
         if not os.path.isdir(plot_dir):
             continue
+        dir_name = os.path.basename(os.path.normpath(plot_dir))
         for png_file in glob.glob(os.path.join(plot_dir, "*.png")):
             basename = os.path.splitext(os.path.basename(png_file))[0]
             if basename in PLOT_SECTIONS:
-                stage_png(png_file, args.outdir, PLOT_SECTIONS[basename])
+                stage_png(png_file, args.outdir, PLOT_SECTIONS[basename], dir_name)
 
 
 if __name__ == "__main__":

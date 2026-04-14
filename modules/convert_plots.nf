@@ -9,10 +9,16 @@ process CONVERT_PLOTS_TO_PNG {
     tuple val(meta), path("png_plots/*"), emit: plot_dirs
 
     script:
+    def allowed = ["plots_keepPA_vaf_size_filt_matched", "plots_keep_vaf_size_filt_matched"]
     """
     mkdir -p png_plots
     for d in ${plot_dirs}; do
-        out="png_plots/\$(basename \$d)"
+        name=\$(basename \$d)
+        case "\$name" in
+            ${allowed.join('|')}) ;;
+            *) continue ;;
+        esac
+        out="png_plots/\$name"
         mkdir -p "\$out"
         for pdf in "\$d"/*.pdf; do
             [ -e "\$pdf" ] || continue

@@ -21,7 +21,7 @@ process MULTIQC {
 
     multiqc mqc_inputs \
         --config ${multiqc_config} \
-        --title "${meta.analysis_type} Somatic Variant QC" \
+        --title "Subcohort ${meta.analysis_type} - Somatic Variant QC" \
         --force
     """
 }
