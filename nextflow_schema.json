@@ -63,6 +63,16 @@
         },
         "exome_size" : {
             "type": "string"
+        },
+        "run_signatures" : {
+            "type": "boolean",
+            "default": true,
+            "description": "Run SigProfilerExtractor per subcohort downstream of QC."
+        },
+        "sigprofiler_seed" : {
+            "type": "string",
+            "format": "file-path",
+            "description": "Optional SigProfiler Seeds.txt for reproducible re-runs."
         }
     }}
 

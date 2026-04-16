@@ -2,6 +2,7 @@
 nextflow.enable.dsl = 2
 include { PROCESS_VCFS } from "./subworkflows/process_vcfs.nf"
 include { SUBCOHORT_ANALYSIS } from "./subworkflows/analyse_cohort.nf"
+include { SIGNATURES } from "./subworkflows/signatures.nf"
 
 workflow DERMATLAS_SOMATIC_VARIANT_QC {
 
@@ -48,6 +49,14 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
             params.exome_size,
             params.alternative_transcripts
         )
+
+        if (params.run_signatures) {
+            SIGNATURES(
+                SUBCOHORT_ANALYSIS.out.output_variants,
+                PROCESS_VCFS.out.all_files,
+                params.genome_build
+            )
+        }
     }
 
     emit:
