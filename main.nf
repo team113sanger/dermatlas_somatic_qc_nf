@@ -52,7 +52,7 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
 
         if (params.run_signatures) {
             SIGNATURES(
-                SUBCOHORT_ANALYSIS.out.output_variants,
+                SUBCOHORT_ANALYSIS.out.sig_maf,
                 PROCESS_VCFS.out.all_files,
                 params.genome_build
             )

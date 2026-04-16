@@ -25,6 +25,7 @@ process MAF_TO_TARGETS {
 
 process BUILD_SAMPLE_VCF {
     container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
+    publishDir "${params.sigprofiler_outdir}/${params.release_version}/${meta.analysis_type}/VCFS", mode: params.publish_dir_mode
 
     input:
     tuple val(meta),

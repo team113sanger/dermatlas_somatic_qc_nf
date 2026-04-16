@@ -29,24 +29,37 @@ workflow SIGNATURES {
     }
     | set { targets_per_sample }
 
-    // Split per-sample annotated VCFs by caller, rekey on sample_id.
+    // (sample_id, analysis_type) pairs — authoritative subcohort membership
+    // derived from the keep MAF via MAF_TO_TARGETS.
+    targets_per_sample
+    | map { sid, meta, _sbs, _id_file, _keep_maf -> tuple(sid, meta.analysis_type) }
+    | set { subcohort_samples }
+
+    // Restrict the per-sample annotated VCFs to subcohort members, tagging each
+    // VCF with its analysis_type. Samples not in any subcohort are dropped here
+    // explicitly rather than silently later in combine.
     annotated_vcf_ch
     | flatMap { it }
-    | branch { meta, vcf, tbi ->
+    | map { meta, vcf, tbi -> tuple(meta.sample_id, meta, vcf, tbi) }
+    | combine(subcohort_samples, by: 0)
+    | branch { sid, meta, vcf, tbi, analysis_type ->
         caveman: meta.caller == 'caveman'
-            return tuple(meta.sample_id, vcf, tbi)
+            return tuple(sid, analysis_type, vcf, tbi)
         pindel: meta.caller == 'pindel'
-            return tuple(meta.sample_id, vcf, tbi)
+            return tuple(sid, analysis_type, vcf, tbi)
     }
     | set { by_caller }
 
-    // Combine-by-key: every (subcohort × sample) gets its matching caveman + pindel VCF.
-    // `combine(by: 0)` is the right tool — `join` would drop duplicates when a sample appears
-    // in multiple subcohorts (all, onePerPatient, independent).
+    // Combine-by-key on (sample_id, analysis_type) so each subcohort's targets
+    // attach to the correct VCF. The composite key prevents a sample that appears
+    // in multiple subcohorts (all, onePerPatient, independent) from cross-matching.
     targets_per_sample
-    | combine(by_caller.caveman, by: 0)
-    | combine(by_caller.pindel,  by: 0)
-    | map { _sid, meta, sbs, id_file, keep_maf, cv, cv_tbi, pv, pv_tbi ->
+    | map { sid, meta, sbs, id_file, keep_maf ->
+        tuple(sid, meta.analysis_type, meta, sbs, id_file, keep_maf)
+    }
+    | combine(by_caller.caveman, by: [0, 1])
+    | combine(by_caller.pindel,  by: [0, 1])
+    | map { _sid, _at, meta, sbs, id_file, keep_maf, cv, cv_tbi, pv, pv_tbi ->
         tuple(meta, sbs, id_file, cv, cv_tbi, pv, pv_tbi, keep_maf)
     }
     | set { build_inputs }

@@ -100,5 +100,6 @@ workflow SUBCOHORT_ANALYSIS {
 
     emit:
     output_variants = QC_VARIANTS.out.keep_maf
+    sig_maf         = QC_VARIANTS.out.sig_maf
 
 }
