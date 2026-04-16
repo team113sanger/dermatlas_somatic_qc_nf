@@ -69,6 +69,11 @@
             "default": true,
             "description": "Run SigProfilerExtractor per subcohort downstream of QC."
         },
+        "sigprofiler_outdir" : {
+            "type": "string",
+            "format": "directory-path",
+            "description": "Publish directory for SigProfiler outputs. Separate from `outdir` so signature results can live alongside (not inside) the variants_combined tree — DERMATLAS convention: `${PROJECT_DIR}/analysis/sigprofiler`."
+        },
         "sigprofiler_seed" : {
             "type": "string",
             "format": "file-path",

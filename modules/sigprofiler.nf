@@ -1,6 +1,6 @@
 process MAF_TO_TARGETS {
     container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/qc:0.5.1"
-    publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}/sigprofiler", mode: params.publish_dir_mode
+    publishDir "${params.sigprofiler_outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
 
     input:
     tuple val(meta), path(keep_maf)
@@ -55,12 +55,11 @@ process BUILD_SAMPLE_VCF {
 }
 
 
-// No container directive: this process is expected to run on the host with the
-// `sigprofiler/1.1.21-virtual-environment` module loaded (see farm22 profile in
-// nextflow.config). For non-farm22 environments, add a container or ensure
-// SigProfilerExtractor + the GRCh38 reference bundle are on PATH.
+// Runs on the host (no container) with the sigprofiler module loaded.
+// Requires LSF / HPC with environment modules — adjust for other environments.
 process SIGPROFILER_EXTRACT {
-    publishDir "${params.outdir}/${params.release_version}/${meta.analysis_type}/sigprofiler", mode: params.publish_dir_mode
+    module "sigprofiler/1.1.21-virtual-environment"
+    publishDir "${params.sigprofiler_outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
 
     cpus 12
     memory { 12.GB * task.attempt }
