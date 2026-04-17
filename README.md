@@ -17,6 +17,7 @@ In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples 
 - Performs Dermatlas variant-QC, variant filtering, and generates Dermatlas diagnostic plots 
 - Calculates the TMB of Dermatlas `keep` samples produced by Dermatlas variant-QC
 - Creates `.xlsx` file outputs from mafs for releasing to project scientists
+- Optionally extracts mutational signatures per subcohort with SigProfilerExtractor (SBS/DBS from Caveman, ID from Pindel)
 
 ## Inputs 
 
@@ -54,6 +55,9 @@ subcohorts = [
 
 **Optional**
 - `alternative_transcripts`: path to a file containing a tab-delimited list of HUGO gene symbol - transcript ID pairs for correcting the transcript considered canonical.
+- `run_signatures`: toggle the SigProfilerExtractor signature-calling subworkflow (default: `true`).
+- `sigprofiler_outdir`: output directory for signature-calling results. Kept separate from `outdir` to follow the Dermatlas convention `${PROJECT_DIR}/analysis/sigprofiler`.
+- `sigprofiler_seed`: path to an optional SigProfiler `Seeds.txt` file for reproducible re-runs.
 
 
 ### Reference variables
@@ -126,6 +130,7 @@ flowchart TB
     v34["filter"]
     v35["alternative_transcripts"]
     v42["exome_size"]
+    v47["genome_build"]
     end
     subgraph " "
     v1["metadata"]
@@ -135,6 +140,8 @@ flowchart TB
     v40[" "]
     v44[" "]
     v46[" "]
+    v54[" "]
+    v55[" "]
     end
     subgraph DERMATLAS_SOMATIC_VARIANT_QC
     subgraph PROCESS_VCFS
@@ -149,6 +156,13 @@ flowchart TB
     v43([CALCULATE_SAMPLE_TMB])
     v45([MAF_TO_EXCEL])
     v41(( ))
+    end
+    subgraph SIGNATURES
+    v48([MAF_TO_TARGETS])
+    v49([BUILD_SAMPLE_VCF])
+    v50([GROUP_SUBCOHORT_VCFS])
+    v51([SIGPROFILER_EXTRACT])
+    v52(( ))
     end
     end
     v0 --> v1
@@ -177,6 +191,15 @@ flowchart TB
     v43 --> v44
     v41 --> v45
     v45 --> v46
+    v36 --> v48
+    v48 --> v49
+    v13 --> v49
+    v49 --> v52
+    v52 --> v50
+    v52 --> v51
+    v47 --> v51
+    v50 --> v54
+    v51 --> v55
 ```
 
 ## Testing

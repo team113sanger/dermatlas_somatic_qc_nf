@@ -14,7 +14,7 @@ This document contains an overview of how to configure and run the pipeline; for
 
 ### 1. Generating pipeline inputs for Dermatlas studies
 
-The study-specific inputs required to run the copy number calling pipeline are: the sample vcfs for a study's matched tumour-normal pairs; sets of the sample groupings; and the study metadata sheet. See [dematlas analysis setup](https://dermatlas-docs-4861e2.pages.internal.sanger.ac.uk/user_docs/dermatlas_analysis_setup.html) for instructions on how to prepare these.
+The study-specific inputs required to run the somatic QC pipeline are: the sample vcfs for a study's matched tumour-normal pairs; sets of the sample groupings; and the study metadata sheet. See [dematlas analysis setup](https://dermatlas-docs-4861e2.pages.internal.sanger.ac.uk/user_docs/dermatlas_analysis_setup.html) for instructions on how to prepare these.
 
 Somatic QC is run on several cohort sample lists: matched tumours only, one tumour per patient, all independent tumours, etc.
 
@@ -29,6 +29,7 @@ The defaults provided should be suitable for running out of the box but for some
 - The path to the `caveman_vcfs`  and the path to the `pindel_vcfs`
 - The paths to write the outputs of caveman and pindel filtering to (`caveman_outdir` and `pindel_outdir`; in Dermatlas this is normally the same directory that `caveman_vcfs` and `pindel_vcfs` reside in)
 - The output directory to publish somatic variant QC results into
+- The `sigprofiler_outdir` for SigProfilerExtractor signature-calling outputs (set `run_signatures = false` to skip that subworkflow)
 - The completed biosample manifest for the cohort
 - The `one_per_patient`, independent tumours and all-sample sample lists generated in stage 2
 
@@ -44,6 +45,7 @@ params {
     pindel_vcfs = "${PROJECT_DIR}/analysis/pindel_files/**.pindel.vep.vcf.gz"
     pindel_outdir = "${PROJECT_DIR}/analysis/pindel_files"
     outdir = "${PROJECT_DIR}/analysis/variants_combined"
+    sigprofiler_outdir = "${PROJECT_DIR}/analysis/sigprofiler"
     release_version = "version1"
     metadata_manifest = "${PROJECT_DIR}/metadata/${STUDY}-biosample-manifest-completed.tsv"
     subcohorts = [
@@ -105,7 +107,7 @@ set -euo pipefail
 source source_me.sh 
 
 export COHORT="DEMO"
-export REVISION="0.6.3"
+export REVISION="1.0.0"
 
 # Load module dependencies
 module load nextflow-23.10.0
@@ -129,7 +131,7 @@ The bsub magic at the start of the wrapper script will send a nextflow "master j
 
 ### Troubleshooting problem nextflow runs:
 
-There are several reasons the gemline pipeline might fail including bugs in the pipeline; issues with LSF; or misconfiguration.  In most cases (especially when you suspect a farm/ LSF failure), simply re-submitting the pipeline with
+There are several reasons the somatic QC pipeline might fail including bugs in the pipeline; issues with LSF; or misconfiguration.  In most cases (especially when you suspect a farm/ LSF failure), simply re-submitting the pipeline with
 
 ```bash
 bsub < run_somatic_calling.sh
@@ -137,7 +139,7 @@ bsub < run_somatic_calling.sh
 
 will trigger the nextflow `-resume` directive and the pipeline will pick up where it left off.
 
-It is often worth taking a glance at the pipeline logs (<YOUR\_PROJECT\_DIR>/analysis/logs/gemline\_calling\_%J.o) to follow and see what's going on, especially if things have failed/
+It is often worth taking a glance at the pipeline logs (<YOUR\_PROJECT\_DIR>/analysis/logs/somatic\_variants\_%J.o) to follow and see what's going on, especially if things have failed/
 
 When jobs fail, nextflow will provide the path to the directory a failed job was run in. I'd recommend inspecting the files in here with `ls -la` and printing some of the log files for the job with
 
