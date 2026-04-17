@@ -1,4 +1,4 @@
-include { MAF_TO_TARGETS; BUILD_SAMPLE_VCF; SIGPROFILER_EXTRACT } from "../modules/sigprofiler.nf"
+include { MAF_TO_TARGETS; BUILD_SAMPLE_VCF; GROUP_SUBCOHORT_VCFS; SIGPROFILER_EXTRACT } from "../modules/sigprofiler.nf"
 
 workflow SIGNATURES {
     take:
@@ -72,6 +72,8 @@ workflow SIGNATURES {
     | map { meta, vcf -> tuple([analysis_type: meta.analysis_type], vcf) }
     | groupTuple()
     | set { subcohort_vcfs }
+
+    GROUP_SUBCOHORT_VCFS(subcohort_vcfs)
 
     SIGPROFILER_EXTRACT(subcohort_vcfs, genome_build)
 

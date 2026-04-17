@@ -56,6 +56,37 @@ process BUILD_SAMPLE_VCF {
 }
 
 
+process GROUP_SUBCOHORT_VCFS {
+    container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
+    publishDir "${params.sigprofiler_outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
+
+    input:
+    tuple val(meta), path(vcfs, stageAs: "in/*")
+
+    output:
+    tuple val(meta), path("VCFS_GROUPED"), emit: grouped
+
+    script:
+    """
+    mkdir -p VCFS_GROUPED
+    for v in in/*.vcf; do
+        name=\$(basename \$v)
+        bgzip -c \$v > VCFS_GROUPED/\${name}.gz
+        tabix -p vcf VCFS_GROUPED/\${name}.gz
+    done
+    find VCFS_GROUPED -maxdepth 1 -name '*.vcf.gz' | sort > merge.list
+    bcftools concat -d all -a -f merge.list > VCFS_GROUPED/all.vcf
+    rm -f VCFS_GROUPED/*.vcf.gz VCFS_GROUPED/*.vcf.gz.tbi merge.list
+    """
+
+    stub:
+    """
+    mkdir -p VCFS_GROUPED
+    touch VCFS_GROUPED/all.vcf
+    """
+}
+
+
 // Runs on the host (no container) with the sigprofiler module loaded.
 // Requires LSF / HPC with environment modules — adjust for other environments.
 process SIGPROFILER_EXTRACT {
@@ -72,6 +103,8 @@ process SIGPROFILER_EXTRACT {
 
     output:
     tuple val(meta), path("results"), emit: signatures
+    tuple val(meta), path("VCFS/input"),        emit: sig_input,   optional: true
+    tuple val(meta), path("VCFS/output"),       emit: sig_output,  optional: true
 
     script:
     def seed_arg = params.sigprofiler_seed ?: ''
