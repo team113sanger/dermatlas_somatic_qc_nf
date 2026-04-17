@@ -1,6 +1,14 @@
+// Resolve a subcohort's publish-dir name: user-provided legacy map wins,
+// otherwise fall back to the raw analysis_type key.
+def sigprofilerPublishDir(meta) {
+    def name = params.sigprofiler_subcohort_names?.get(meta.analysis_type) ?: meta.analysis_type
+    "${params.sigprofiler_outdir}/${params.release_version}/${name}"
+}
+
+
 process MAF_TO_TARGETS {
     container "gitlab-registry.internal.sanger.ac.uk/dermatlas/analysis-methods/qc:0.5.1"
-    publishDir "${params.sigprofiler_outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
+    publishDir path: { sigprofilerPublishDir(meta) }, mode: params.publish_dir_mode
 
     input:
     tuple val(meta), path(keep_maf)
@@ -25,7 +33,7 @@ process MAF_TO_TARGETS {
 
 process BUILD_SAMPLE_VCF {
     container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
-    publishDir "${params.sigprofiler_outdir}/${params.release_version}/${meta.analysis_type}/VCFS", mode: params.publish_dir_mode
+    publishDir path: { "${sigprofilerPublishDir(meta)}/VCFS" }, mode: params.publish_dir_mode
 
     input:
     tuple val(meta),
@@ -58,7 +66,7 @@ process BUILD_SAMPLE_VCF {
 
 process GROUP_SUBCOHORT_VCFS {
     container "quay.io/biocontainers/bcftools:1.20--h8b25389_0"
-    publishDir "${params.sigprofiler_outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
+    publishDir path: { sigprofilerPublishDir(meta) }, mode: params.publish_dir_mode
 
     input:
     tuple val(meta), path(vcfs, stageAs: "in/*")
@@ -91,7 +99,7 @@ process GROUP_SUBCOHORT_VCFS {
 // Requires LSF / HPC with environment modules — adjust for other environments.
 process SIGPROFILER_EXTRACT {
     module "sigprofiler/1.1.21-virtual-environment"
-    publishDir "${params.sigprofiler_outdir}/${params.release_version}/${meta.analysis_type}", mode: params.publish_dir_mode
+    publishDir path: { sigprofilerPublishDir(meta) }, mode: params.publish_dir_mode
 
     cpus 12
     memory { 12.GB * task.attempt }

@@ -58,6 +58,7 @@ subcohorts = [
 - `run_signatures`: toggle the SigProfilerExtractor signature-calling subworkflow (default: `true`).
 - `sigprofiler_outdir`: output directory for signature-calling results. Kept separate from `outdir` to follow the Dermatlas convention `${PROJECT_DIR}/analysis/sigprofiler`.
 - `sigprofiler_seed`: path to an optional SigProfiler `Seeds.txt` file for reproducible re-runs.
+- `sigprofiler_subcohort_names`: map of subcohort key → publish-dir name for SigProfiler outputs (default maps `onePerPatient` → `one_tumour_per_patient`, `independent` → `independent_tumours`, `all` → `all_tumours` to match the manual analysis layout). Unmapped keys fall back to the raw key.
 
 
 ### Reference variables

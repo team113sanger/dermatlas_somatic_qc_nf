@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `GROUP_SUBCOHORT_VCFS` — bgzip/tabix per-sample VCFs and `bcftools concat` into `VCFS_GROUPED/all.vcf` for the cohort.
   - `SIGPROFILER_EXTRACT` — runs SigProfilerExtractor on the subcohort VCFs (host module `sigprofiler/1.1.21-virtual-environment`); emits `results/`, and the matrix-generator `VCFS/input` / `VCFS/output` artefacts.
 - `QC_VARIANTS` now emits a `sig_maf` channel (`keep_vaf_size_filt_matched_caveman_pindel_*.maf`) used as the signature-calling input.
-- New params: `run_signatures` (default `true`), `sigprofiler_outdir`, `sigprofiler_seed`.
+- New params: `run_signatures` (default `true`), `sigprofiler_outdir`, `sigprofiler_seed`, `sigprofiler_subcohort_names`.
+- `sigprofiler_subcohort_names` maps subcohort keys → legacy publish-dir names (e.g. `onePerPatient` → `one_tumour_per_patient`, `independent` → `independent_tumours`) to match the manual-analysis layout; unmapped keys fall back to the raw key.
 - `sigprofiler_outdir` set to `${PROJECT_DIR}/analysis/sigprofiler` in `assets/somatic_variants.config`.
 - `farm22` profile: HPC modules for `BUILD_SAMPLE_VCF` / `GROUP_SUBCOHORT_VCFS` and `long` queue for `SIGPROFILER_EXTRACT`.
 
