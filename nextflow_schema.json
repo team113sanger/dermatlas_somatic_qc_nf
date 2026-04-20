@@ -63,6 +63,25 @@
         },
         "exome_size" : {
             "type": "string"
+        },
+        "run_signatures" : {
+            "type": "boolean",
+            "default": true,
+            "description": "Run SigProfilerExtractor per subcohort downstream of QC."
+        },
+        "sigprofiler_outdir" : {
+            "type": "string",
+            "format": "directory-path",
+            "description": "Publish directory for SigProfiler outputs. Separate from `outdir` so signature results can live alongside (not inside) the variants_combined tree — DERMATLAS convention: `${PROJECT_DIR}/analysis/sigprofiler`."
+        },
+        "sigprofiler_seed" : {
+            "type": "string",
+            "format": "file-path",
+            "description": "Optional SigProfiler Seeds.txt for reproducible re-runs."
+        },
+        "sigprofiler_subcohort_names" : {
+            "type": "object",
+            "description": "Map of subcohort key → legacy publish-dir name for SigProfiler outputs (e.g. onePerPatient → one_tumour_per_patient). Unmapped keys fall back to the raw key."
         }
     }}
 

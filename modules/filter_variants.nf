@@ -89,10 +89,11 @@ process QC_VARIANTS {
     val(filter)
     path(alternative_transcripts)
 
-    output: 
+    output:
     tuple val(meta), path("pass*.maf"), emit: pass_maf
     tuple val(meta), path("voi*.maf"), emit: voi_maf
     tuple val(meta), path("keep*.maf"), emit: keep_maf
+    tuple val(meta), path("keep_vaf_size_filt_matched_caveman_pindel_*.maf"), emit: sig_maf
     tuple val(meta), path("plots*"), emit: plot_dirs
     tuple val(meta), path("*.tsv"), emit: qc_tsv
 
