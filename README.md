@@ -80,7 +80,7 @@ Default reference file values supplied within the `nextflow.config` file can be 
 
 ## Usage 
 
-The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 1.0.0`)  and the `.config` file supplied for a run.
+The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 1.1.0`)  and the `.config` file supplied for a run.
 
 An example wrapper script:
 ```
@@ -93,7 +93,7 @@ An example wrapper script:
 #BSUB -eo logs/somatic_variants_pipeline_%J.e
 
 export CONFIG_FILE="commands/example_config.json"
-export REVISION="1.0.0"
+export REVISION="1.1.0"
 
 # Load module dependencies
 module load nextflow-23.10.0
