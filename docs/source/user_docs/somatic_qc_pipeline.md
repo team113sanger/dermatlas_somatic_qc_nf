@@ -14,7 +14,7 @@ This document contains an overview of how to configure and run the pipeline; for
 
 ### 1. Generating pipeline inputs for Dermatlas studies
 
-The study-specific inputs required to run the copy number calling pipeline are: the sample vcfs for a study's matched tumour-normal pairs; sets of the sample groupings; and the study metadata sheet. See [dematlas analysis setup]() for instructions on how to prepare these.
+The study-specific inputs required to run the somatic QC pipeline are: the sample vcfs for a study's matched tumour-normal pairs; sets of the sample groupings; and the study metadata sheet. See [dematlas analysis setup](https://dermatlas-docs-4861e2.pages.internal.sanger.ac.uk/user_docs/dermatlas_analysis_setup.html) for instructions on how to prepare these.
 
 Somatic QC is run on several cohort sample lists: matched tumours only, one tumour per patient, all independent tumours, etc.
 
@@ -29,21 +29,12 @@ The defaults provided should be suitable for running out of the box but for some
 - The path to the `caveman_vcfs`  and the path to the `pindel_vcfs`
 - The paths to write the outputs of caveman and pindel filtering to (`caveman_outdir` and `pindel_outdir`; in Dermatlas this is normally the same directory that `caveman_vcfs` and `pindel_vcfs` reside in)
 - The output directory to publish somatic variant QC results into
+- The `sigprofiler_outdir` for SigProfilerExtractor signature-calling outputs (set `run_signatures = false` to skip that subworkflow)
 - The completed biosample manifest for the cohort
 - The `one_per_patient`, independent tumours and all-sample sample lists generated in stage 2
 
-There is an extensive set of other parameters are specified, but won't normally need changing. These are mostly paths to reference files, which don't change. For convenience of maintaining the pipeline in a way that in can be run on or off farm22, most of the reference files are stored in
 
-/lustre/scratch124/casm/team113/secure-lustre/resources/dermatlas  
-These are direct copies of the resources directories for legacy dermatlas PUS
-
-**Example file:**
-
-```
-  
-
-```
-
+Should you need one, an example config file is included below:
 **somatic\_variant.config**
 
 ```java
@@ -54,26 +45,56 @@ params {
     pindel_vcfs = "${PROJECT_DIR}/analysis/pindel_files/**.pindel.vep.vcf.gz"
     pindel_outdir = "${PROJECT_DIR}/analysis/pindel_files"
     outdir = "${PROJECT_DIR}/analysis/variants_combined"
+    run_signatures = true
+    sigprofiler_outdir = "${PROJECT_DIR}/analysis/sigprofiler"
     release_version = "version1"
     metadata_manifest = "${PROJECT_DIR}/metadata/${STUDY}-biosample-manifest-completed.tsv"
-    all_samples = "${PROJECT_DIR}/metadata/${STUDY}_${PROJECT}-analysed_all_tum.txt"
-    one_per_patient = "${PROJECT_DIR}/metadata/${STUDY}_${PROJECT}-one_tumour_per_patient_all_tum.txt"
-    independent = "${PROJECT_DIR}/metadata/${STUDY}_${PROJECT}-independent_tumours_all.tsv"
- 
+    subcohorts = [
+        "all": [
+            sample_list: "${PROJECT_DIR}/metadata/${STUDY}_${PROJECT}-analysed_all_tum.txt"
+        ],
+        "onePerPatient": [
+            sample_list: "${PROJECT_DIR}/metadata/${STUDY}_${PROJECT}-one_tumour_per_patient_all_tum.txt"
+        ],
+        "independent": [
+            sample_list: "${PROJECT_DIR}/metadata/${STUDY}_${PROJECT}-independent_tumours_all.tsv"
+        ]
+    ]
+    publish_dir_mode = "copy"
+    exome_size = 48.225157
+    baitset = "/lustre/scratch127/casm/projects/dermatlas/resources/baitset/GRCh38_WES5_canonical_pad100.merged.bed"
+    dbsnp_variants = "/lustre/scratch127/casm/projects/dermatlas/resources/dbsnp/dbSNP155_common.tsv.gz{,.tbi}"
+    dbsnp_header = "/lustre/scratch127/casm/projects/dermatlas/resources/dbsnp/addheader.txt"
+    genome_build = "GRCh38"
+    filtering_column = "gnomAD_AF"
+    filter_option = "filter2"
+    alternative_transcripts = "/lustre/scratch127/casm/projects/dermatlas/resources/ensembl/dermatlas_noncanonical_transcripts_ens103.tsv"
+
 }
 ```
 
 **Launching the nextflow pipeline**
 
-Once you have your inputs and are authenticated you can prepare to launch the pipeline by modifying and saving this wrapper script in you project directory. You will need to update the desitination of the params file and your desired log file locations. 
+Provided that you have setup your project with new versions of dermanager (dermanger >= 0.4.3) the script commands/run_somatic_variants.sh should have been autopopulated. If this is the case then you should be able to launch the pipeline on the Sanger farm22 LSF with:
 
-In this script the "`-r"`  option specifies which version of the pipeline you'd like to run. Normally you should select the latest version.
+
+```
+bsub -e logs/somatic_variants_%J.e -o logs/somatic_variants_%J.o < commands/run_somatic_variants.sh
+```
+
+
+The bsub magic at the start of the wrapper script will send a nextflow “master job”, will watch all other jobs to the oversubscribed queue (where it can live in peace running for a long period without fear of termination). Nextflow will shortly start submitting jobs on your behalf to the relevant queues.
+
+If you haven’t initialised your project with dermanager, you can prepare to launch the pipeline by modifying and saving the wrapper script below and the config file provided above. You will need to update the desitination of the config file + desired log file locations.
+
+In this script the “-r"  option specifies which version of the pipeline you’d like to run. Normally you should select the latest version. Check the project gitlab for info on latest versions.
+
 
 **Example file:**
 
 **run\_somatic\_calling.sh**
 
-```java
+```bash
 #!/bin/bash
 #BSUB -q oversubscribed
 #BSUB -G team113-grp
@@ -87,7 +108,7 @@ set -euo pipefail
 source source_me.sh 
 
 export COHORT="DEMO"
-export REVISION="0.6.3"
+export REVISION="1.0.0"
 
 # Load module dependencies
 module load nextflow-23.10.0
@@ -101,45 +122,39 @@ nextflow run 'https://github.com/team113sanger/dermatlas_somatic_qc_nf' \
 -profile farm22
 ```
 
-If you called the script `run_somatic_calling.sh` then you'll be able to submit 
+If you called the script `run_somatic_variants.sh` then you'll be able to submit 
 
-```java
-bsub < run_somatic_calling.sh
+```bash
+bsub -e logs/somatic_variants_%J.e -o logs/somatic_variants_%J.o < commands/run_somatic_variants.sh
 ```
 
 The bsub magic at the start of the wrapper script will send a nextflow "master job", which looks after all other jobs to the oversubscribed queue (where it can live in peace running for a long period without fear of termination). Nextflow will shortly start submitting jobs on your behalf to the relevant queues
 
 ### Troubleshooting problem nextflow runs:
 
-### There are several reasons the gemline pipeline might fail including bugs in the pipeline; issues with LSF; or misconfiguration.  In most cases (especially when you suspect a farm/ LSF failure), simply re-submitting the pipeline with
+There are several reasons the somatic QC pipeline might fail including bugs in the pipeline; issues with LSF; or misconfiguration.  In most cases (especially when you suspect a farm/ LSF failure), simply re-submitting the pipeline with
 
-```java
+```bash
 bsub < run_somatic_calling.sh
 ```
 
 will trigger the nextflow `-resume` directive and the pipeline will pick up where it left off.
 
-It is often worth taking a glance at the pipeline logs (<YOUR\_PROJECT\_DIR>/analysis/logs/gemline\_calling\_%J.o) to follow and see what's going on, especially if things have failed/
+It is often worth taking a glance at the pipeline logs (<YOUR\_PROJECT\_DIR>/analysis/logs/somatic\_variants\_%J.o) to follow and see what's going on, especially if things have failed/
 
 When jobs fail, nextflow will provide the path to the directory a failed job was run in. I'd recommend inspecting the files in here with `ls -la` and printing some of the log files for the job with
 
-```java
+```bash
 cat .command.err
 cat .command.out
 cat .command.sh
-
 ```
-
-> [!IMPORTANT]
-> Multiple runs
->
-> Nextflow is able to keep track of past runs by creating a .nextflow directory in the current location and stores intermediate files in a work. If you want to run the same pipeline but on different cohorts (e.g. hidradenomas and hidradenocarcionmas) in parallel, please ensure that you launch each instance of the pipeline in a seperate directory - otherwise nextflow can't keep track of what is going on an report errors about "nextflow lock files "
 
 **Make a release folder**
 
 "Creating a release" allows you to copy out the key results from Somatic variant QC into a seperate folder. This can be performed in exactly the same way as detailed in [DERMATLAS - Post-processing CaVEMan and Pindel calls](/spaces/CAS/pages/116131145/DERMATLAS+-+Post-processing+CaVEMan+and+Pindel+calls)  
 
-```java
+```bash
 export PROJECT_DIR="/lustre/scratch125/casm/team113da/projects/dermatlas_pu11_project_dir/7651_3442_DERMATLAS_Superficial_acral_fibromyxoma_WES"
 export STUDY=7651
 export PROJECT=3442
@@ -152,8 +167,4 @@ mkdir release_v${i}
 source ${PROJECT_DIR}/scripts/maf/source_me.sh
 bash ${PROJECT_DIR}/scripts/maf/make_variant_release.sh \
 $PROJECT_DIR ${COHORT} version${i} release_v${i} > release_v${i}/files.log
-
-
-
-
 ```
