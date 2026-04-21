@@ -17,13 +17,13 @@ process MAF_TO_DNDSCV_INPUT {
     val(merge_by_patient)
 
     output:
-    tuple val(meta), path("${meta.analysis_type}_dndscv.in"), emit: mut_table
+    tuple val(meta), path("${meta.cohort_prefix}_dndscv.in"), emit: mut_table
 
     script:
     """
     Rscript /opt/repo/maf2dndscv.R \\
         --infile ${sig_maf} \\
-        --outfile ${meta.analysis_type}_dndscv.in \\
+        --outfile ${meta.cohort_prefix}_dndscv.in \\
         --by_patient ${merge_by_patient}
     """
 
@@ -50,13 +50,13 @@ process DNDSCV_RUN {
     """
     Rscript /opt/repo/dndscv_grch38.R \\
         --mut_file ${mut_table} \\
-        --suffix ${meta.analysis_type} \\
+        --suffix ${meta.cohort_prefix} \\
         --refdb ${refdb} \\
         ${cov_arg} > dndscv.out
     """
 
     stub:
     """
-    touch dndscv_genes_${meta.analysis_type}.tsv dndscv.out
+    touch dndscv_genes_${meta.cohort_prefix}.tsv dndscv.out
     """
 }
