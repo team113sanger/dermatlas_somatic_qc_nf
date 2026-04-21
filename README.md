@@ -18,6 +18,7 @@ In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples 
 - Calculates the TMB of Dermatlas `keep` samples produced by Dermatlas variant-QC
 - Creates `.xlsx` file outputs from mafs for releasing to project scientists
 - Optionally extracts mutational signatures per subcohort with SigProfilerExtractor (SBS/DBS from Caveman, ID from Pindel)
+- Optionally runs dNdScv per subcohort for significantly mutated gene discovery (with and without epigenomic covariates)
 
 ## Inputs 
 
@@ -59,6 +60,12 @@ subcohorts = [
 - `sigprofiler_outdir`: output directory for signature-calling results. Kept separate from `outdir` to follow the Dermatlas convention `${PROJECT_DIR}/analysis/sigprofiler`.
 - `sigprofiler_seed`: path to an optional SigProfiler `Seeds.txt` file for reproducible re-runs.
 - `sigprofiler_subcohort_names`: map of subcohort key → publish-dir name for SigProfiler outputs (default maps `onePerPatient` → `one_tumour_per_patient`, `independent` → `independent_tumours`, `all` → `all_tumours` to match the manual analysis layout). Unmapped keys fall back to the raw key.
+- `run_dndscv`: toggle the dNdScv significantly-mutated-genes subworkflow (default: `true`).
+- `dndscv_outdir`: output directory for dNdScv results. Kept separate from `outdir` to follow the Dermatlas convention `${PROJECT_DIR}/analysis/dndscv`.
+- `dndscv_refdb`: path to the dNdScv reference CDS `.rda` file (e.g. `RefCDS_human_GRCh38_GencodeV18_recommended.rda`). Required when `run_dndscv = true`. Defaulted on `farm22`.
+- `dndscv_covariates`: optional path to a covariates `.rda` file (e.g. `covariates_hg19_hg38_epigenome_pcawg.rda`). When set, dNdScv is run twice per subcohort (with and without covariates); when unset, only the without-covariates mode is run. Defaulted on `farm22`.
+- `dndscv_merge_by_patient`: if `true`, variants from sibling tumours sharing a PDXXXX patient prefix are merged prior to running dNdScv (default: `true`).
+- `dndscv_subcohort_names`: map of subcohort key → publish-dir name for dNdScv outputs (same defaults as `sigprofiler_subcohort_names`).
 
 
 ### Reference variables

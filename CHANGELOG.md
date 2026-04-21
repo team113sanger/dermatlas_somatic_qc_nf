@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # 1.1.0 [April 20th 2026]
 ### Added
+- `DNDSCV` subworkflow: per-subcohort significantly-mutated-gene discovery with dNdScv.
+  - `MAF_TO_DNDSCV_INPUT` — converts the subcohort `sig_maf` into the 5-column dNdScv mutation table, with optional patient-level merging of sibling tumours sharing a PDXXXX prefix.
+  - `DNDSCV_RUN` — runs dNdScv per subcohort; when a covariates file is supplied, runs twice (with/without covariates) and publishes into `with_covariates` / `without_covariates` sub-directories to match the manual-analysis layout.
+- New params: `run_dndscv` (default `true`), `dndscv_outdir`, `dndscv_refdb`, `dndscv_covariates`, `dndscv_merge_by_patient`, `dndscv_subcohort_names`.
+- `farm22` profile: defaults for `dndscv_refdb` / `dndscv_covariates` and an 8.GB memory boost for `DNDSCV_RUN`.
+- `dndscv_outdir` set to `${PROJECT_DIR}/analysis/dndscv` in `assets/somatic_variants.config`.
+
+# 1.1.0 [April 20th 2026]
+### Added
 - `SIGNATURES` subworkflow: per-subcohort mutational-signature extraction with SigProfilerExtractor.
   - `MAF_TO_TARGETS` — derives SBS/DBS and ID target regions from the subcohort keep MAF.
   - `BUILD_SAMPLE_VCF` — pulls PASS variants from caveman (SBS/DBS) and pindel (ID) per sample, concats into a SigProfiler-ready VCF, warn-only MAF-vs-VCF count check.
