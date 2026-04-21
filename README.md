@@ -64,7 +64,7 @@ subcohorts = [
 - `dndscv_outdir`: output directory for dNdScv results. Kept separate from `outdir` to follow the Dermatlas convention `${PROJECT_DIR}/analysis/dndscv`.
 - `dndscv_refdb`: path to the dNdScv reference CDS `.rda` file (e.g. `RefCDS_human_GRCh38_GencodeV18_recommended.rda`). Required when `run_dndscv = true`. Defaulted on `farm22`.
 - `dndscv_covariates`: optional path to a covariates `.rda` file (e.g. `covariates_hg19_hg38_epigenome_pcawg.rda`). When set, dNdScv is run twice per subcohort (with and without covariates); when unset, only the without-covariates mode is run. Defaulted on `farm22`.
-- `dndscv_merge_by_patient`: if `true`, variants from sibling tumours sharing a PDXXXX patient prefix are merged prior to running dNdScv (default: `false` — the `onePerPatient`/`independent` subcohorts already handle patient-level selection).
+- `dndscv_merge_by_patient`: if `true`, variants from sibling tumours sharing a PDXXXX patient prefix are merged prior to running dNdScv (default: `true`).
 - `dndscv_subcohort_names`: map of subcohort key → publish-dir name for dNdScv outputs (same defaults as `sigprofiler_subcohort_names`).
 
 

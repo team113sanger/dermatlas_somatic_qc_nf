@@ -29,7 +29,7 @@ process MAF_TO_DNDSCV_INPUT {
 
     stub:
     """
-    touch ${meta.analysis_type}_dndscv.in
+    touch ${meta.cohort_prefix}_dndscv.in
     """
 }
 
@@ -42,7 +42,7 @@ process DNDSCV_RUN {
     tuple val(meta), path(mut_table), path(refdb), path(covariates)
 
     output:
-    tuple val(meta), path("dndscv_genes_${meta.analysis_type}.tsv"), emit: genes
+    tuple val(meta), path("dndscv_genes_${meta.cohort_prefix}.tsv"), emit: genes
     tuple val(meta), path("dndscv.out"),                             emit: stdout_log
 
     script:
