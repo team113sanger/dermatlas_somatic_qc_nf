@@ -80,7 +80,7 @@ Default reference file values supplied within the `nextflow.config` file can be 
 
 ## Usage 
 
-The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 1.1.0`)  and the `.config` file supplied for a run.
+The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 1.2.0`)  and the `.config` file supplied for a run.
 
 An example wrapper script:
 ```
@@ -93,7 +93,7 @@ An example wrapper script:
 #BSUB -eo logs/somatic_variants_pipeline_%J.e
 
 export CONFIG_FILE="commands/example_config.json"
-export REVISION="1.1.0"
+export REVISION="1.2.0"
 
 # Load module dependencies
 module load nextflow-23.10.0
@@ -138,7 +138,8 @@ flowchart TB
     v34["filter"]
     v35["alternative_transcripts"]
     v42["exome_size"]
-    v47["genome_build"]
+    v64["genome_build"]
+    v69["merge_by_patient"]
     end
     subgraph " "
     v1["metadata"]
@@ -148,66 +149,92 @@ flowchart TB
     v40[" "]
     v44[" "]
     v46[" "]
-    v54[" "]
-    v55[" "]
+    v63[" "]
+    v66[" "]
+    v67[" "]
+    v68["signatures"]
+    v73["stdout_log"]
+    v74["genes"]
     end
-    subgraph DERMATLAS_SOMATIC_VARIANT_QC
-    subgraph PROCESS_VCFS
-    v8([FILTER_PASS_VARIANTS])
-    v9([INDEX_PASS_VARIANTS])
-    v12([ADD_COMMON_ANNOTATIONS])
-    v3(( ))
+    subgraph "DERMATLAS_SOMATIC_VARIANT_QC [DERMATLAS_SOMATIC_VARIANT_QC]"
+    subgraph "DERMATLAS_SOMATIC_VARIANT_QC:PROCESS_VCFS [PROCESS_VCFS]"
+    v8(["FILTER_PASS_VARIANTS"])
+    v9(["INDEX_PASS_VARIANTS"])
+    v12(["ADD_COMMON_ANNOTATIONS"])
+    v6(( ))
     v13(( ))
     end
-    subgraph SUBCOHORT_ANALYSIS
-    v36([QC_VARIANTS])
-    v43([CALCULATE_SAMPLE_TMB])
-    v45([MAF_TO_EXCEL])
+    subgraph "DERMATLAS_SOMATIC_VARIANT_QC:SUBCOHORT_ANALYSIS [SUBCOHORT_ANALYSIS]"
+    v36(["QC_VARIANTS"])
+    v43(["CALCULATE_SAMPLE_TMB"])
+    v45(["MAF_TO_EXCEL"])
+    v15(( ))
     v41(( ))
     end
-    subgraph SIGNATURES
-    v48([MAF_TO_TARGETS])
-    v49([BUILD_SAMPLE_VCF])
-    v50([GROUP_SUBCOHORT_VCFS])
-    v51([SIGPROFILER_EXTRACT])
-    v52(( ))
+    subgraph "DERMATLAS_SOMATIC_VARIANT_QC:SIGNATURES [SIGNATURES]"
+    v47(["MAF_TO_TARGETS"])
+    v59(["BUILD_SAMPLE_VCF"])
+    v62(["GROUP_SUBCOHORT_VCFS"])
+    v65(["SIGPROFILER_EXTRACT"])
+    v48(( ))
+    v60(( ))
     end
+    subgraph "DERMATLAS_SOMATIC_VARIANT_QC:DNDSCV [DNDSCV]"
+    v70(["MAF_TO_DNDSCV_INPUT"])
+    v72(["DNDSCV_RUN"])
+    v71(( ))
+    end
+    v3(( ))
+    v5(( ))
     end
     v0 --> v1
     v2 --> v3
-    v4 --> v3
+    v4 --> v5
     v7 --> v8
-    v3 --> v8
+    v6 --> v8
     v8 --> v9
     v9 --> v12
     v10 --> v12
     v11 --> v12
     v12 --> v13
-    v14 --> v13
+    v14 --> v15
     v32 --> v36
     v33 --> v36
     v34 --> v36
     v35 --> v36
-    v13 --> v36
+    v15 --> v36
     v36 --> v40
     v36 --> v39
+    v36 --> v47
     v36 --> v38
     v36 --> v37
+    v36 --> v70
     v36 --> v41
+    v36 --> v48
     v42 --> v43
     v41 --> v43
     v43 --> v44
     v41 --> v45
     v45 --> v46
-    v36 --> v48
-    v48 --> v49
-    v13 --> v49
-    v49 --> v52
-    v52 --> v50
-    v52 --> v51
-    v47 --> v51
-    v50 --> v54
-    v51 --> v55
+    v47 --> v48
+    v48 --> v59
+    v59 --> v60
+    v60 --> v62
+    v62 --> v63
+    v64 --> v65
+    v60 --> v65
+    v65 --> v68
+    v65 --> v67
+    v65 --> v66
+    v69 --> v70
+    v70 --> v71
+    v71 --> v72
+    v72 --> v74
+    v72 --> v73
+    v3 --> v6
+    v5 --> v6
+    v13 --> v15
+    v13 --> v48
 ```
 
 ## Testing

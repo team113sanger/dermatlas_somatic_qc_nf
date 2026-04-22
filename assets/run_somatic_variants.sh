@@ -8,7 +8,7 @@ set -euo pipefail
 
 source source_me.sh
 
-export REVISION="1.1.0"
+export REVISION="1.2.0"
 
 # Create isolated pipeline directory
 PIPELINE_DIR="${PROJECT_DIR}/somatic_pipeline"
