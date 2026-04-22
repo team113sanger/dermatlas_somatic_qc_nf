@@ -43,7 +43,7 @@ workflow SUBCOHORT_ANALYSIS {
     | map { meta, file, index -> [meta.analysis_type, file, index] }
     | groupTuple()
     | map { analysis_type, files, indexes ->
-        tuple(analysis_type, [analysis_type: analysis_type], files.flatten() + indexes.flatten())
+        tuple(analysis_type, [analysis_type: analysis_type, cohort_prefix: params.cohort_prefix], files.flatten() + indexes.flatten())
     }
     | set { relevant_vcfs }
 

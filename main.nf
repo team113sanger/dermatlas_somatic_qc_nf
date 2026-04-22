@@ -3,6 +3,7 @@ nextflow.enable.dsl = 2
 include { PROCESS_VCFS } from "./subworkflows/process_vcfs.nf"
 include { SUBCOHORT_ANALYSIS } from "./subworkflows/analyse_cohort.nf"
 include { SIGNATURES } from "./subworkflows/signatures.nf"
+include { DNDSCV } from "./subworkflows/dndscv.nf"
 
 workflow DERMATLAS_SOMATIC_VARIANT_QC {
 
@@ -55,6 +56,18 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
                 SUBCOHORT_ANALYSIS.out.sig_maf,
                 PROCESS_VCFS.out.all_files,
                 params.genome_build
+            )
+        }
+
+        if (params.run_dndscv) {
+            dndscv_refdb = file(params.dndscv_refdb, checkIfExists: true)
+            dndscv_cov   = params.dndscv_covariates ? file(params.dndscv_covariates, checkIfExists: true)
+                                                   : file("${projectDir}/assets/NO_COV")
+            DNDSCV(
+                SUBCOHORT_ANALYSIS.out.sig_maf,
+                dndscv_refdb,
+                dndscv_cov,
+                params.dndscv_merge_by_patient ? 'y' : 'n'
             )
         }
     }
