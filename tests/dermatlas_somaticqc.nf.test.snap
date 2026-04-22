@@ -4,7 +4,8 @@
             [
                 [
                     {
-                        "analysis_type": "all"
+                        "analysis_type": "all",
+                        "cohort_prefix": "6674_6675_Angioleiomyoma"
                     },
                     [
                         "keepPA_caveman_pindel_all.maf:md5,27ead7712a78226fcd2fcc052eaddbf0",
@@ -23,7 +24,8 @@
                 ],
                 [
                     {
-                        "analysis_type": "independent"
+                        "analysis_type": "independent",
+                        "cohort_prefix": "6674_6675_Angioleiomyoma"
                     },
                     [
                         "keepPA_caveman_pindel_independent.maf:md5,27ead7712a78226fcd2fcc052eaddbf0",
@@ -42,7 +44,8 @@
                 ],
                 [
                     {
-                        "analysis_type": "onePerPatient"
+                        "analysis_type": "onePerPatient",
+                        "cohort_prefix": "6674_6675_Angioleiomyoma"
                     },
                     [
                         "keepPA_caveman_pindel_onePerPatient.maf:md5,2e0937ea72fefc48f54a6d879041a8c3",

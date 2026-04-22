@@ -82,6 +82,35 @@
         "sigprofiler_subcohort_names" : {
             "type": "object",
             "description": "Map of subcohort key → legacy publish-dir name for SigProfiler outputs (e.g. onePerPatient → one_tumour_per_patient). Unmapped keys fall back to the raw key."
+        },
+        "run_dndscv" : {
+            "type": "boolean",
+            "default": true,
+            "description": "Run dNdScv significantly-mutated-gene discovery per subcohort downstream of QC."
+        },
+        "dndscv_outdir" : {
+            "type": "string",
+            "format": "directory-path",
+            "description": "Publish directory for dNdScv outputs. Separate from `outdir` so dNdScv results can live alongside (not inside) the variants_combined tree — DERMATLAS convention: `${PROJECT_DIR}/analysis/dndscv`."
+        },
+        "dndscv_refdb" : {
+            "type": "string",
+            "format": "file-path",
+            "description": "Path to the dNdScv reference CDS .rda file (e.g. RefCDS_human_GRCh38_GencodeV18_recommended.rda). Required when run_dndscv = true."
+        },
+        "dndscv_covariates" : {
+            "type": "string",
+            "format": "file-path",
+            "description": "Optional path to a covariates .rda file. When set, dNdScv is run twice per subcohort (with and without covariates); when unset, only the without-covariates mode is run."
+        },
+        "dndscv_merge_by_patient" : {
+            "type": "boolean",
+            "default": true,
+            "description": "If true, variants from sibling tumours sharing a PDXXXX patient prefix are merged prior to running dNdScv."
+        },
+        "dndscv_subcohort_names" : {
+            "type": "object",
+            "description": "Map of subcohort key → legacy publish-dir name for dNdScv outputs (e.g. onePerPatient → one_tumour_per_patient). Unmapped keys fall back to the raw key."
         }
     }}
 

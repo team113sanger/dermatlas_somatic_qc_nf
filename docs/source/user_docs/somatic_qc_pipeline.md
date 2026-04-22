@@ -30,6 +30,7 @@ The defaults provided should be suitable for running out of the box but for some
 - The paths to write the outputs of caveman and pindel filtering to (`caveman_outdir` and `pindel_outdir`; in Dermatlas this is normally the same directory that `caveman_vcfs` and `pindel_vcfs` reside in)
 - The output directory to publish somatic variant QC results into
 - The `sigprofiler_outdir` for SigProfilerExtractor signature-calling outputs (set `run_signatures = false` to skip that subworkflow)
+- The `dndscv_outdir` for dNdScv significantly-mutated-gene outputs (set `run_dndscv = false` to skip that subworkflow)
 - The completed biosample manifest for the cohort
 - The `one_per_patient`, independent tumours and all-sample sample lists generated in stage 2
 
@@ -47,6 +48,8 @@ params {
     outdir = "${PROJECT_DIR}/analysis/variants_combined"
     run_signatures = true
     sigprofiler_outdir = "${PROJECT_DIR}/analysis/sigprofiler"
+    run_dndscv = true
+    dndscv_outdir = "${PROJECT_DIR}/analysis/dndscv"
     release_version = "version1"
     metadata_manifest = "${PROJECT_DIR}/metadata/${STUDY}-biosample-manifest-completed.tsv"
     subcohorts = [
@@ -108,7 +111,7 @@ set -euo pipefail
 source source_me.sh 
 
 export COHORT="DEMO"
-export REVISION="1.0.0"
+export REVISION="1.2.0"
 
 # Load module dependencies
 module load nextflow-23.10.0
