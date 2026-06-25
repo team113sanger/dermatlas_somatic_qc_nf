@@ -15,13 +15,13 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
                                             : Channel.empty()
 
 
-    caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs)
+    caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs, checkIfExists: true)
     | map {file -> tuple([sample_id: file.simpleName,
                           caller: "caveman",
                           filename: file.name.split(".vcf")[0],
                           vcf_outdir: params.caveman_outdir], file)}
 
-    pindel_vcf_ch = Channel.fromPath(params.pindel_vcfs)
+    pindel_vcf_ch = Channel.fromPath(params.pindel_vcfs, checkIfExists: true)
     | map {file -> tuple([sample_id: file.simpleName,
                           caller: "pindel",
                           filename: file.name.split(".vcf")[0],
