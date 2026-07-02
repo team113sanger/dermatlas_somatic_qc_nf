@@ -4,6 +4,7 @@ include { PROCESS_VCFS } from "./subworkflows/process_vcfs.nf"
 include { SUBCOHORT_ANALYSIS } from "./subworkflows/analyse_cohort.nf"
 include { SIGNATURES } from "./subworkflows/signatures.nf"
 include { DNDSCV } from "./subworkflows/dndscv.nf"
+include { ONCODRIVEFML } from "./subworkflows/oncodrivefml.nf"
 
 workflow DERMATLAS_SOMATIC_VARIANT_QC {
 
@@ -70,6 +71,29 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
                 dndscv_refdb,
                 dndscv_cov,
                 params.dndscv_merge_by_patient ? 'y' : 'n'
+            )
+        }
+
+        if (params.run_oncodrivefml) {
+            ofml_cadd     = file(params.oncodrivefml_cadd_tabix,           checkIfExists: true)
+            ofml_cadd_tbi = file("${params.oncodrivefml_cadd_tabix}.tbi",  checkIfExists: true)
+            ofml_elements = file(params.oncodrivefml_elements_bed,         checkIfExists: true)
+            ofml_exclude  = params.oncodrivefml_exclude_samples
+                              ? file(params.oncodrivefml_exclude_samples, checkIfExists: true)
+                              : file("${projectDir}/assets/NO_EXCLUDE")
+            ofml_analysis_tpl = file("${projectDir}/assets/oncodrivefml_analysis.conf.template", checkIfExists: true)
+            ofml_bgdata_tpl   = file("${projectDir}/assets/bgdatav2.conf.template",              checkIfExists: true)
+            ONCODRIVEFML(
+                SUBCOHORT_ANALYSIS.out.sig_maf,
+                ofml_exclude,
+                ofml_cadd,
+                ofml_cadd_tbi,
+                ofml_elements,
+                ofml_analysis_tpl,
+                ofml_bgdata_tpl,
+                params.oncodrivefml_bgdata_dir,
+                params.oncodrivefml_bgcache_dir,
+                params.oncodrivefml_seed
             )
         }
     }

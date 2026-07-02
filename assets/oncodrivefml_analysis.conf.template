@@ -1,0 +1,30 @@
+[genome]
+build = hg38
+
+[signature]
+method = complement
+
+[score]
+file = __CADD_TABIX__
+format = tabix
+chr = 1
+chr_prefix =
+pos = 2
+ref = 3
+alt = 4
+score = 6
+
+[statistic]
+method = amean
+discard_mnp = False
+sampling = 100000
+sampling_chunk = 1000
+sampling_min_obs = 10
+
+    [[indels]]
+    include = TRUE
+    method = max
+    max_consecutive = 7
+
+[settings]
+cores =
