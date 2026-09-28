@@ -26,7 +26,7 @@ In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples 
 
 - `caveman_vcfs`: path to a set of Caveman vcf files (using **.vcf expansion)
 - `pindel_vcfs`: path to a set of Pindel vcf files (using **.vcf expansion)
-- `metadata_manifest`: path to a tab-delimited manifest containing information about sample phenotype and preparation. Required columns and allowed values are:
+- `metadata_manifest` (optional; not read by any step yet, but checked for existence when set): path to a tab-delimited manifest containing information about sample phenotype and preparation. Required columns and allowed values are:
     - Sex: M or F
     - Sanger_DNA_ID: PDID of the sample (e.g. PD001234)
     - OK_to_analyse_DNA?: Y or N
@@ -39,17 +39,20 @@ In brief, the pipeline takes the Caveman and Pindel VCF files for a set samples 
 - `release_version`: Directory to release results into within an output directory (e.g.`version1`)
 
 **Subcohorts**
-- `subcohorts`: A map of subcohort names to their configuration. Each subcohort entry should have a `sample_list` property pointing to a TSV file containing tumor-normal pairs. Example:
+- `subcohorts`: A map of subcohort names to their configuration. Each subcohort entry should have a `sample_list` property pointing to a TSV file containing tumor-normal pairs. A sample list may be empty, in which case that subcohort produces no outputs. Example:
 ```groovy
 subcohorts = [
     "all": [
-        sample_list: "/path/to/all_matched_pairs.tsv"
+        sample_list: "/path/to/analysed_all.tsv"
     ],
-    "one_per_patient": [
-        sample_list: "/path/to/one_tumour_per_patient_pairs.tsv"
+    "onePerPatient": [
+        sample_list: "/path/to/one_tumour_per_patient_all.tsv"
     ],
     "independent": [
-        sample_list: "/path/to/independent_pairs.tsv"
+        sample_list: "/path/to/independent_tumours_all.tsv"
+    ],
+    "related": [
+        sample_list: "/path/to/related_tumours_all.tsv"
     ]
 ]
 ```
@@ -59,7 +62,7 @@ subcohorts = [
 - `run_signatures`: toggle the SigProfilerExtractor signature-calling subworkflow (default: `true`).
 - `sigprofiler_outdir`: output directory for signature-calling results. Kept separate from `outdir` to follow the Dermatlas convention `${PROJECT_DIR}/analysis/sigprofiler`.
 - `sigprofiler_seed`: path to an optional SigProfiler `Seeds.txt` file for reproducible re-runs.
-- `sigprofiler_subcohort_names`: map of subcohort key → publish-dir name for SigProfiler outputs (default maps `onePerPatient` → `one_tumour_per_patient`, `independent` → `independent_tumours`, `all` → `all_tumours` to match the manual analysis layout). Unmapped keys fall back to the raw key.
+- `sigprofiler_subcohort_names`: map of subcohort key → publish-dir name for SigProfiler outputs (default maps `onePerPatient` → `one_tumour_per_patient`, `independent` → `independent_tumours`, `related` → `related_tumours`, `all` → `all_tumours` to match the manual analysis layout). Unmapped keys fall back to the raw key.
 - `run_dndscv`: toggle the dNdScv significantly-mutated-genes subworkflow (default: `true`).
 - `dndscv_outdir`: output directory for dNdScv results. Kept separate from `outdir` to follow the Dermatlas convention `${PROJECT_DIR}/analysis/dndscv`.
 - `dndscv_refdb`: path to the dNdScv reference CDS `.rda` file (e.g. `RefCDS_human_GRCh38_GencodeV18_recommended.rda`). Required when `run_dndscv = true`. Defaulted on `farm22`.
@@ -78,35 +81,218 @@ Reference files that are reused across pipeline executions have been placed with
 
 Default reference file values supplied within the `nextflow.config` file can be overided by adding them to the params `.json` file. An example complete params file `example_params.json` is supplied within this repo for demonstation.
 
-## Usage 
+## Usage
 
-The recommended way to launch this pipeline is using a wrapper script (e.g. `bsub < my_wrapper.sh`) that submits nextflow as a job and records the version (**e.g.** `-r 1.2.0`)  and the `.config` file supplied for a run.
+Whether launched via the integrated website or manually, the pipeline is submitted the same way: `run_somatic_variants.sh` is piped into `bsub` as the
+job script.
 
-An example wrapper script:
-```
-#!/bin/bash
-#BSUB -q oversubscribed
-#BSUB -G team113-grp
-#BSUB -R "select[mem>8000] rusage[mem=8000] span[hosts=1]"
-#BSUB -M 8000
-#BSUB -oo logs/somatic_variants_pipeline_%J.o
-#BSUB -eo logs/somatic_variants_pipeline_%J.e
-
-export CONFIG_FILE="commands/example_config.json"
-export REVISION="1.2.0"
-
-# Load module dependencies
-module load nextflow-23.10.0
-module load /software/modules/ISG/singularity/3.11.4
-
-# Create a nextflow job that will spawn other jobs
-
-nextflow run 'https://github.com/team113sanger/dermatlas_somatic_qc_nf' \
--r ${REVISION} \
--c ${CONFIG_FILE} \
--profile farm22 
+```bash
+bsub -o "<stdout_log>" -e "<stderr_log>" \
+     -g "<lsf_job_group>" -J "<job_name>" \
+     < <dir>/run_somatic_variants.sh
 ```
 
+Queue, resource group and memory come from the `#BSUB` directives inside the wrapper, so `bsub` adds only the job
+name, job group and log paths. It is an ordinary bash script, so `bash run_somatic_variants.sh` also runs it in the
+foreground on any farm node - the `#BSUB` lines are inert comments; `bsub` only makes it a batch job. Either way
+it sources `./source_me.sh` relative to the directory it was started from.
+
+Nearly all runs are triggered from the [Dermatlas cohorts page](https://team113.sanger.ac.uk/dermatlas/cohorts/),
+which issues that command remotely against a project directory it has already provisioned - `source_me.sh`,
+`run_somatic_variants.sh` and `somatic_variants.config` are all written for you. There is nothing to do by hand.
+
+### Without the website
+
+Clone the repo and supply what the website otherwise provisions: a project directory, the pipeline's
+environment, and a couple of edits to the wrapper.
+
+The config globs `${ANALYSIS_DIR}/caveman_files/**.smartphase.vep.vcf.gz` and
+`${ANALYSIS_DIR}/pindel_files/**.pindel.vep.vcf.gz`, so VCFs may sit at any depth below those directories. See
+[Inputs](#cohort-dependent-variables) for the sample-list and metadata formats.
+
+```
+<project_dir>/                                   # PROJECT_DIR
+├── metadata/
+│   ├── 6740_3016-analysed_all.tsv               # every analysed tumour, matched or not
+│   ├── 6740_3016-independent_tumours_all.tsv
+│   ├── 6740_3016-one_tumour_per_patient_all.tsv
+│   ├── 6740_3016-related_tumours_all.tsv        # may be empty
+│   └── cohort_metadata.tsv                      # patient metadata manifest (optional)
+├── analysis/                                    # ANALYSIS_DIR; results land here
+│   ├── caveman_files/<sample>/*.smartphase.vep.vcf.gz
+│   └── pindel_files/<sample>/*.pindel.vep.vcf.gz
+└── somatic_pipe/                                # created by the wrapper, not by you
+    ├── .lock                                    # see Reclaiming disk space
+    ├── .completed_successfully                  #   "
+    ├── work/                                    # deleted after a successful run
+    └── tmp/
+```
+
+The environment itself can come from a `source_me.sh` or from the wrapper directly. Both are supported; pick one.
+
+<details>
+<summary><strong>With a <code>source_me.sh</code></strong> - reusable across runs, and the shape the website generates</summary>
+
+1. Write `source_me.sh` beside the wrapper in `assets/`, which is where the wrapper looks by default. With
+   reporting opted out, these ten exports are the whole contract (`COHORT_METADATA_FILE` is optional):
+
+   ```bash
+   export PROJECT_DIR="/lustre/.../6740_3016_MY_COHORT_WES"
+   export COMMANDS_DIR="${PROJECT_DIR}/commands"
+   export ANALYSIS_DIR="${PROJECT_DIR}/analysis"
+   export STUDY="6740"          # prefixes output filenames, and the run id
+   export PROJECT="3016"        # prefixes output filenames, and the run id
+   export COHORT="MY_COHORT"    # ends the output filename prefix
+   export DNA_PAIR_LIST_ANALYSED_ALL="${PROJECT_DIR}/metadata/6740_3016-analysed_all.tsv"
+   export DNA_PAIR_LIST_INDEPENDENT_TUMOURS_ALL="${PROJECT_DIR}/metadata/6740_3016-independent_tumours_all.tsv"
+   export DNA_PAIR_LIST_ONE_TUMOUR_PER_PATIENT_ALL="${PROJECT_DIR}/metadata/6740_3016-one_tumour_per_patient_all.tsv"
+   export DNA_PAIR_LIST_RELATED_TUMOURS_ALL="${PROJECT_DIR}/metadata/6740_3016-related_tumours_all.tsv"  # may be empty
+   export COHORT_METADATA_FILE="${PROJECT_DIR}/metadata/cohort_metadata.tsv"  # optional; metadata_manifest
+   ```
+
+2. In the wrapper, under **OPT-IN REPORTING** set `DERMATLAS_WEBSITE_LOGGING` and
+   `DERMATLAS_SLACK_NOTIFICATIONS` to `"false"`, and under **RUN CONFIGURATION** point `CONFIG` at your
+   `somatic_variants.config` and set `REVISION` to the release tag to run.
+
+3. Submit from the directory holding `source_me.sh`:
+
+   ```bash
+   cd dermatlas_somatic_qc_nf/assets
+   bsub -o run.out -e run.err -J "somatic-<cohort>" < run_somatic_variants.sh
+   ```
+
+To override a single value without regenerating the file, uncomment just that variable in the wrapper's
+**MANUAL ENVIRONMENT OVERRIDES** block - it is read after `source_me.sh`, so it wins.
+
+</details>
+
+<details>
+<summary><strong>By editing <code>run_somatic_variants.sh</code> directly</strong> - self-contained, nothing to track outside the script</summary>
+
+1. Under **ENVIRONMENT SETUP**, set `SOURCE_ME="none"` so the wrapper skips sourcing anything.
+
+2. Under **MANUAL ENVIRONMENT OVERRIDES**, uncomment and fill in the pipeline-essential exports - the same
+   ten listed in the `source_me.sh` route above.
+
+3. Under **OPT-IN REPORTING** set `DERMATLAS_WEBSITE_LOGGING` and `DERMATLAS_SLACK_NOTIFICATIONS` to
+   `"false"`, and under **RUN CONFIGURATION** point `CONFIG` at your `somatic_variants.config` and set
+   `REVISION` to the release tag to run.
+
+4. Submit from anywhere - with `SOURCE_ME="none"` there is no `source_me.sh` to be beside:
+
+   ```bash
+   bsub -o run.out -e run.err -J "somatic-<cohort>" < dermatlas_somatic_qc_nf/assets/run_somatic_variants.sh
+   ```
+
+The same block is the annotated master list for either route - every variable with its purpose and an example
+value, including the website- and Slack-only ones you would add if you opted back in.
+
+</details>
+
+`somatic_variants.config` reads these same variables, so it needs no editing unless you want different
+`subcohorts` or reference files. `REVISION` is fetched from GitHub, so your clone supplies the wrapper and config,
+not the pipeline code - local edits to the workflow are not picked up until released.
+
+The header of [`assets/run_somatic_variants.sh`](assets/run_somatic_variants.sh) maps every section and marks the
+`[edit]` blocks, which are the only places you should need to touch.
+
+### Toggles
+
+| Variable | Default | Effect when `false` |
+| --- | --- | --- |
+| `DERMATLAS_WEBSITE_LOGGING` | `true` | no analysis-log record is written to the Dermatlas website |
+| `DERMATLAS_SLACK_NOTIFICATIONS` | `true` | no Slack message on completion or failed launch |
+| `DERMATLAS_CLEANUP_WORK_DIR` | `true` | this run's work directory is kept instead of deleted |
+
+Work-directory cleanup only ever happens after a **successful** run; a failed one always keeps its work
+directory, and so does one stopped by `bkill` or an LSF limit - `DERMATLAS_CLEANUP_WORK_DIR` is not consulted
+unless the run succeeded. Cleanup relies on `params.publish_dir_mode = 'copy'`, and only ever removes the `work/` directory
+the wrapper itself created.
+
+None are required. Each is resolved from the environment, most specific first - a shell export beats
+`source_me.sh`, which beats the default under **OPT-IN REPORTING** - so a single run can opt out without
+editing anything:
+
+```bash
+export DERMATLAS_CLEANUP_WORK_DIR=false
+bsub -o run.out -e run.err -J "somatic-<cohort>" < run_somatic_variants.sh
+```
+
+`true/false`, `yes/no`, `on/off` and `1/0` are all accepted in any case; anything else fails the launch
+immediately rather than part-way through.
+
+### Reclaiming disk space
+
+`work/` and `tmp/` are the bulk of a cohort's disk and inode use, and are usually deleted by a separate clean-up
+script you run yourself rather than by the wrapper. So the wrapper leaves three dot-files in
+`${PROJECT_DIR}/<pipeline_slug>/` that let such a script tell a live run from a finished one - **including a run
+started by a different user, with no LSF tools involved**.
+
+<details>
+<summary><strong>The artefacts, and how to delete safely around them</strong></summary>
+
+| Artefact | Meaning |
+| --- | --- |
+| `.lock` | created once and **never removed**. Its presence says only that this directory uses the scheme. It never means a run is live. |
+| `.completed_successfully` | the last run finished successfully |
+| `.completed_with_error` | the last run reached a conclusion and failed - `bkill` and LSF limit kills included |
+
+Liveness is not a file. It is an exclusive `flock` held on `.lock` for as long as the wrapper owns the directory,
+and the kernel releases it when the process dies by any means, including `kill -9` and a node crash. So there is
+never a stale lock to clear - and `.lock` must never be deleted, because unlinking it lets the next run lock a
+fresh inode and exclude nobody.
+
+Both sentinels are cleared when a run starts and exactly one is written when it ends, so their absence is a
+truthful "no verdict for what is on disk right now".
+
+A second submission of a cohort while one is already running fails immediately with exit 75, naming the holder.
+That is deliberate: both runs would otherwise share one `work/`, and the first to finish would delete it under
+the second.
+
+#### Reading the state
+
+| State | `flock -n` | `.completed_successfully` | `.completed_with_error` |
+| --- | --- | --- | --- |
+| running now | busy | - | - |
+| succeeded | free | yes | - |
+| failed, incl. `bkill`ed | free | - | yes |
+| died mid-run (`kill -9`, node crash) | free | - | - |
+
+`flock -n <file> <command>` takes the lock, runs the command, and releases it - or, if something else already
+holds the lock, runs nothing at all and exits with the code given to `-E`. So a check and a deletion are the same
+one-liner with a different command on the end:
+
+```bash
+p="${PROJECT_DIR}/somatic_pipe"
+
+# 1. Is a run using this directory? `true` does nothing, so this only reports.
+if flock -n -E 75 "$p/.lock" true; then
+    echo "free - nothing is using $p"
+else
+    echo "RUNNING - held by:"; cat "$p/.lock"
+fi
+
+# 2. Move the work directory, but only if nothing is using it. The lock is held
+#    for as long as the mv takes, so a run cannot start underneath it.
+flock -n -E 75 "$p/.lock" mv "$p/work" /path/to/to_delete/
+echo $?   # 0 = moved.  75 = a run owns it, and nothing was touched.
+```
+
+Testing the lock needs only **read** permission on `.lock`, so this works against another user's running
+pipeline. Moving their `work/` afterwards still needs write permission on their pipeline directory.
+
+Take the lock across both the decision and the move, never test-then-move, and require `.lock` to exist first:
+on a directory that pre-dates this scheme `flock` would create one and report a live run as idle. **Neither
+sentinel present means "died mid-run", never "succeeded"**; never unlink or replace `.lock`; and if the pipeline
+directory is on a filesystem not mounted with `flock` (Lustre `localflock`, NFS `local_lock=`) the lock is
+node-local and a sweep running elsewhere will not see it - the wrapper warns about this at launch, but a script
+that deletes data should check `findmnt -T "$p" -no FSTYPE,OPTIONS` itself and refuse. The
+[copy number pipeline README](https://github.com/team113sanger/dermatlas_copy_number_nf#reclaiming-disk-space)
+has a complete sweep script that covers every Dermatlas pipeline directory.
+
+</details>
+
+### Container registry
 
 When running the pipeline for the first time on the farm you will need to provide credentials to pull singularity containers from the team113 sanger gitlab. You should be able to do this by running
 ```
@@ -259,13 +445,28 @@ nextflow run main.nf \
 
 ## Cutting a release
 
-Create a new release with `git hf release start <version>`.
+Cutting a new release requires a new semantic version tag, a changelog entry and
+a commit of the updated version in every file that records it.
 
-Update the semantic version in these files and commit the changes:
-- `assets/run_somatic_variants.sh`
-- `nextflow.config`
+### One-off setup, per clone
 
-Then update the `CHANGELOG.md` and commit it. Finally `git hf release finish <version>`.
+Releases go through `git hf` (HubFlow). If it is not on your `PATH`, `module load git`.
+In a fresh clone, enable it once:
+
+```bash
+git hf init   # writes this clone's hubflow branch/prefix config; the defaults are correct
+```
+
+That is the only setup required.
+
+### Steps
+
+1. `git hf release start <version>`
+2. `./.update-version.sh <version>` — sets the semantic version in every file that
+   records it (`assets/run_somatic_variants.sh`, `docs/source/conf.py`, `nextflow.config`).
+   Run `./.update-version.sh --help` for details. Commit the changes.
+3. Update `CHANGELOG.md` and commit it.
+4. `git hf release finish <version>`
 
 
 ## Asset release bundles
@@ -284,13 +485,12 @@ https://github.com/team113sanger/dermatlas_somatic_qc_nf/releases/download/<ref>
 | `main-latest` | `assets/` at the head of `main`, i.e. the latest released state | every push to `main` |
 | `develop-latest` | `assets/` at the head of `develop` | every push to `develop` |
 
-The two `-latest` refs are fixed tags on pre-releases: each push force-moves the tag onto the
-new HEAD and replaces the bundle in place, so the download URL never changes and always
-serves that branch's current assets. `releases/latest/download/...` is deliberately not used -
-it resolves only to the newest non-pre-release, so it cannot address the rolling channels.
+The two `-latest` refs are fixed tags on pre-releases. Each push replaces the bundle attached
+to the tag, so the download URL never changes and always serves that branch's current assets.
+`releases/latest/download/...` is deliberately not used - it resolves only to the newest
+non-pre-release, so it cannot address the rolling channels.
 
-This repository is GitLab-primary and push-mirrored to GitHub, so the workflow is inert on
-GitLab CI and runs only once the mirror has synced (~1-2 min). Commit changes to it via
-GitLab, never GitHub. To publish a bundle for a ref that predates the workflow, run it by
-hand from the GitHub Actions tab (*Publish projectify asset bundle* -> *Run workflow*) with
-`ref` set to the tag or branch to build from.
+This repository is GitHub-primary. It was previously GitLab-primary and push-mirrored to
+GitHub; that mirror was retired and the GitLab project archived. To publish a bundle for a
+ref that predates the workflow, run it by hand from the GitHub Actions tab (*Publish
+projectify asset bundle* -> *Run workflow*) with `ref` set to the tag or branch to build from.
