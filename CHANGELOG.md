@@ -4,7 +4,92 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Keywords
+
+As of the release following 1.2.1 the following *keywords* are used at the start of each
+changelog entry to indicate the impact of the change:
+
+- **REPRODUCIBILITY** - a change to the pipeline's scientific processing that
+  may cause the same input data to produce different scientific outputs or
+  results, including changes to algorithms, tolerances, randomisation,
+  scientific functionality, or output formats.
+- **ROBUSTNESS** - a fix or improvement to the pipeline's scientific
+  functionality that improves correctness, reliability, or the range of inputs
+  that can be processed, without intentionally changing the scientific results
+  of an equivalent successful analysis.
+- **INTEGRATION** - a change to how the pipeline integrates with other systems
+  or infrastructure, without changing its scientific processing or results.
+
 ## [Unreleased]
+### Added
+- **INTEGRATION** - run reporting. `lib/Utils.groovy` (shared verbatim with the other
+  Dermatlas pipelines) is wired in by `workflow.onComplete { Utils.reportRun(workflow, params) }`
+  and records each run in the Dermatlas website's analysis log (via `dermatlas-http`, >= 0.6.1)
+  and/or posts a Slack message. Both are explicit opt-ins, gated by the
+  `DERMATLAS_WEBSITE_LOGGING` / `DERMATLAS_SLACK_NOTIFICATIONS` environment toggles, and
+  never fire on stub runs. `nextflow.config` gains `is_stub`,
+  `analysis_pipeline_slug = 'somatic_pipe'` and `trace_file`.
+- **INTEGRATION** - `nextflow.config` gains a `trace {}` block. The execution trace and
+  report are named `execution_trace-<RUN_ID>.txt` / `execution_report-<RUN_ID>.html`
+  under the launcher's `TRACE_DIR`, from the `RUN_ID` the launcher exports (a bare
+  timestamp for a direct `nextflow run`).
+- **INTEGRATION** - `assets/run_somatic_variants.sh` is rebuilt from the reference Dermatlas
+  launcher (as in `dermatlas_copy_number_nf`): it sources the project `source_me.sh`
+  (`SOURCE_ME`, `"none"` to skip), validates the environment before launch, reports a
+  failed launch to stderr and (opt-in) Slack, holds an exclusive `flock` on
+  `${PROJECT_DIR}/somatic_pipe/.lock` (a concurrent submission exits 75), writes a
+  `.completed_successfully` / `.completed_with_error` sentinel, one log per nextflow
+  command (`logs/nextflow-{pull,run}-<RUN_ID>.log`), per-revision `NXF_ASSETS` clones, a
+  pinned `NXF_SINGULARITY_CACHEDIR`, and on success writes
+  `stats/resource-stats-<RUN_ID>.txt`, reports the work-dir usage to the website
+  (`dermatlas-http cohort analysis-workdir-stats`, >= 0.6.2, module-loaded via
+  `DERMATLAS_HTTP_MODULE`) and deletes the work directory (`DERMATLAS_CLEANUP_WORK_DIR`).
+  See "Without the website", "Toggles" and "Reclaiming disk space" in the README.
+- **INTEGRATION** - `.update-version.sh` sets the release version in every file that
+  records it; "Cutting a release" in the README now uses it.
+- **REPRODUCIBILITY** - a fourth subcohort, `related`, is analysed from the tumours in
+  `DNA_PAIR_LIST_RELATED_TUMOURS_ALL`. SigProfiler and dNdScv outputs for it are published
+  under `related_tumours` (`sigprofiler_subcohort_names` / `dndscv_subcohort_names`). A
+  cohort whose list is empty produces no `related` outputs and no error.
+- **INTEGRATION** - `somatic_variants.config` feeds the `related` subcohort from
+  `DNA_PAIR_LIST_RELATED_TUMOURS_ALL`, which `run_somatic_variants.sh` now checks is
+  exported; the MANUAL ENVIRONMENT OVERRIDES block and the README's standalone contract
+  list it too (ten required exports).
+
+### Changed
+- **INTEGRATION** - **Breaking:** the launcher now fails at launch, naming the variables,
+  unless `./source_me.sh` (or the wrapper's overrides) exports `PROJECT_DIR COMMANDS_DIR
+  ANALYSIS_DIR STUDY PROJECT COHORT DNA_PAIR_LIST_ANALYSED_ALL
+  DNA_PAIR_LIST_INDEPENDENT_TUMOURS_ALL DNA_PAIR_LIST_ONE_TUMOUR_PER_PATIENT_ALL
+  DNA_PAIR_LIST_RELATED_TUMOURS_ALL` (plus the website/Slack variables when those
+  toggles are on). The generator that writes `source_me.sh` has to emit them before a
+  project can run this release.
+- **INTEGRATION** - `metadata_manifest` is optional (default `null`). No step reads it, so
+  the pipeline now checks the file exists only when it is set, and the config takes it
+  from `COHORT_METADATA_FILE` when that is exported.
+- **INTEGRATION** - **Breaking:** `assets/somatic_variants.config` takes its sample lists from
+  the variables dermanager exports for them (`DNA_PAIR_LIST_*_ALL`) instead of rebuilding
+  their paths from a filename convention, `metadata_manifest` from `COHORT_METADATA_FILE`
+  instead of `${PROJECT_DIR}/metadata/${STUDY}-biosample-manifest-completed.tsv`, and
+  the VCF inputs and every output directory from `${ANALYSIS_DIR}` instead of
+  `${PROJECT_DIR}/analysis`. Outputs land in the same place for a dermanager project.
+- **INTEGRATION** - **Breaking:** the launcher's directory moves from
+  `${PROJECT_DIR}/somatic_pipeline` to `${PROJECT_DIR}/somatic_pipe`, and its
+  config from `commands/somatic_variants.config` to `commands/somatic_pipe/somatic_variants.config`,
+  matching the slug dermanager unpacks the asset bundle under. A run started under the
+  old directory cannot `-resume` in the new one.
+- **INTEGRATION** - `.github/workflows/publish-assets.yml` no longer moves the rolling
+  `main-latest` / `develop-latest` tags: each is created once and only its bundle is
+  replaced, so `git hf release finish` no longer fails on a moved tag.
+- **INTEGRATION** - the repository is GitHub-primary: `manifest.homePage`, the README and
+  the workflow header no longer point at or defer to GitLab. The GitLab container
+  registry is unchanged.
+- **INTEGRATION** - `docs/source/conf.py` records the pipeline version (was stale at 1.0.0).
+
+### Removed
+- **INTEGRATION** - the timestamp-only report name in `nextflow.config`.
+- **INTEGRATION** - the stale launcher and config copies embedded in the README and the
+  docs, which now document and link to `assets/`.
 
 ## [1.2.1] - 2026-08-27
 ### Added
