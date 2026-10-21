@@ -57,6 +57,8 @@ changelog entry to indicate the impact of the change:
   list it too (ten required exports).
 
 ### Changed
+- **INTEGRATION** - Removed the `-G team113-grp` LSF submission option in `assets/run_somatic_variants.sh` so that user space environmental
+  variables can control group selection.
 - **INTEGRATION** - **Breaking:** the launcher now fails at launch, naming the variables,
   unless `./source_me.sh` (or the wrapper's overrides) exports `PROJECT_DIR COMMANDS_DIR
   ANALYSIS_DIR STUDY PROJECT COHORT DNA_PAIR_LIST_ANALYSED_ALL
