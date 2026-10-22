@@ -20,7 +20,7 @@ changelog entry to indicate the impact of the change:
 - **INTEGRATION** - a change to how the pipeline integrates with other systems
   or infrastructure, without changing its scientific processing or results.
 
-## [Unreleased]
+## [1.2.2] - 2026-10-22
 ### Added
 - **INTEGRATION** - run reporting. `lib/Utils.groovy` (shared verbatim with the other
   Dermatlas pipelines) is wired in by `workflow.onComplete { Utils.reportRun(workflow, params) }`
