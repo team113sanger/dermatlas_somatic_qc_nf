@@ -10,7 +10,9 @@ workflow DERMATLAS_SOMATIC_VARIANT_QC {
     dbsnp_vars   = file(params.dbsnp_variants, checkIfExists: true)
     dbsnp_header = file(params.dbsnp_header, checkIfExists: true)
     baitset      = file(params.baitset, checkIfExists: true)
-    metadata     = Channel.fromPath(params.metadata_manifest, checkIfExists: true) // Unused - for future extensions or deprecation
+    // Optional and unused - for future extensions or deprecation. Checked only when supplied.
+    metadata     = params.metadata_manifest ? Channel.fromPath(params.metadata_manifest, checkIfExists: true)
+                                            : Channel.empty()
 
 
     caveman_vcf_ch = Channel.fromPath(params.caveman_vcfs)
@@ -80,4 +82,5 @@ workflow {
     DERMATLAS_SOMATIC_VARIANT_QC()
 }
 
+workflow.onComplete { Utils.reportRun(workflow, params) }
 
