@@ -31,7 +31,7 @@ process MAF_TO_ONCODRIVEFML_INPUT {
 
 
 process ONCODRIVEFML_RUN {
-    container "gitlab-registry.internal.sanger.ac.uk/team113sanger/team113_software/oncodrivefml:2.4.0"
+    module "oncodrivefml/2.4.0"
     publishDir path: { oncodrivefmlPublishDir(meta) }, mode: params.publish_dir_mode
 
     input:
