@@ -111,6 +111,50 @@
         "dndscv_subcohort_names" : {
             "type": "object",
             "description": "Map of subcohort key → legacy publish-dir name for dNdScv outputs (e.g. onePerPatient → one_tumour_per_patient). Unmapped keys fall back to the raw key."
+        },
+        "run_oncodrivefml" : {
+            "type": "boolean",
+            "default": true,
+            "description": "Run OncodriveFML positive-selection analysis per subcohort downstream of QC."
+        },
+        "oncodrivefml_outdir" : {
+            "type": "string",
+            "format": "directory-path",
+            "description": "Publish directory for OncodriveFML outputs. DERMATLAS convention: `${PROJECT_DIR}/analysis/oncodrivefml`."
+        },
+        "oncodrivefml_seed" : {
+            "type": "integer",
+            "default": 42,
+            "description": "RNG seed passed to `oncodrivefml --seed` for reproducible sampling."
+        },
+        "oncodrivefml_exclude_samples" : {
+            "type": "string",
+            "format": "file-path",
+            "description": "Optional single-column list of SAMPLE IDs to drop before running OncodriveFML."
+        },
+        "oncodrivefml_bgdata_dir" : {
+            "type": "string",
+            "format": "directory-path",
+            "description": "Path to the bgdata local_repository (per-chromosome genome reference tree, ~80 GB). Accessed via bind-mount; not staged. Required when run_oncodrivefml = true."
+        },
+        "oncodrivefml_bgcache_dir" : {
+            "type": "string",
+            "format": "directory-path",
+            "description": "Path to the bgdata cache1 directory. Accessed via bind-mount; not staged. Required when run_oncodrivefml = true."
+        },
+        "oncodrivefml_cadd_tabix" : {
+            "type": "string",
+            "format": "file-path",
+            "description": "Path to the CADD SNV tabix file (e.g. CADD_v1.7_GRCh38_whole_genome_SNVs.tsv.gz). The matching .tbi is expected alongside. Required when run_oncodrivefml = true."
+        },
+        "oncodrivefml_elements_bed" : {
+            "type": "string",
+            "format": "file-path",
+            "description": "Path to the genomic elements BED that defines the regions tested for positive selection. Required when run_oncodrivefml = true."
+        },
+        "oncodrivefml_subcohort_names" : {
+            "type": "object",
+            "description": "Map of subcohort key → legacy publish-dir name for OncodriveFML outputs (e.g. onePerPatient → one_tumour_per_patient). Unmapped keys fall back to the raw key."
         }
     }}
 

@@ -20,6 +20,26 @@ changelog entry to indicate the impact of the change:
 - **INTEGRATION** - a change to how the pipeline integrates with other systems
   or infrastructure, without changing its scientific processing or results.
 
+## [Unreleased]
+### Added
+- **REPRODUCIBILITY** - `ONCODRIVEFML` subworkflow: per-subcohort positive-selection analysis
+  with OncodriveFML 2.4.0 (CADD v1.7 PHRED functional-impact bias), run on the host via the
+  `oncodrivefml/2.4.0` environment module.
+  - `MAF_TO_ONCODRIVEFML_INPUT` - vendored `bin/maf2oncodrivefml.R` converts the subcohort
+    `sig_maf` to the 5-column CHROMOSOME/POSITION/SAMPLE/REF/ALT variants table, with an
+    optional sample-exclusion list.
+  - `ONCODRIVEFML_RUN` - renders `oncodrive_v2.conf` (CADD path, `cores = task.cpus`) and
+    `bbglab/bgdatav2.conf` from templates in the workdir, sets `XDG_CONFIG_HOME=$PWD` so
+    bgdata reads the rendered config without touching `$HOME`, then runs `oncodrivefml -s wes`.
+    The ~80 GB bgdata tree and bgcache are read in place (passed as `val`, not staged).
+- New params: `run_oncodrivefml` (default `true`), `oncodrivefml_outdir`, `oncodrivefml_seed`,
+  `oncodrivefml_exclude_samples`, `oncodrivefml_bgdata_dir`, `oncodrivefml_bgcache_dir`,
+  `oncodrivefml_cadd_tabix`, `oncodrivefml_elements_bed`, `oncodrivefml_subcohort_names`.
+- `farm22` profile: defaults for the four OncodriveFML reference paths (under
+  `/lustre/scratch127/casm/projects/dermatlas/references/oncodrivefml/`) and 4 CPUs / 8.GB
+  for `ONCODRIVEFML_RUN`.
+- New assets: `oncodrivefml_analysis.conf.template`, `bgdatav2.conf.template`, `NO_EXCLUDE` sentinel.
+
 ## [1.2.3] - 2026-11-09
 ### Fixed
 - **INTEGRATION** - `.update-version.sh` is now committed as executable, so the release
