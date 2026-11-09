@@ -7,7 +7,7 @@ def oncodrivefmlPublishDir(meta) {
 
 
 process MAF_TO_ONCODRIVEFML_INPUT {
-    container "rocker/tidyverse:4.4.0"
+    container "docker.io/rocker/tidyverse:4.4.0"
     publishDir path: { oncodrivefmlPublishDir(meta) }, mode: params.publish_dir_mode
 
     input:
