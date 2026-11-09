@@ -135,12 +135,12 @@
         "oncodrivefml_bgdata_dir" : {
             "type": "string",
             "format": "directory-path",
-            "description": "Path to the bgdata local_repository (per-chromosome genome reference tree, ~80 GB). Accessed via bind-mount; not staged. Required when run_oncodrivefml = true."
+            "description": "Path to the bgdata local_repository (per-chromosome genome reference tree, ~80 GB). Read in place from the host; not staged. Required when run_oncodrivefml = true."
         },
         "oncodrivefml_bgcache_dir" : {
             "type": "string",
             "format": "directory-path",
-            "description": "Path to the bgdata cache1 directory. Accessed via bind-mount; not staged. Required when run_oncodrivefml = true."
+            "description": "Path to the bgdata cache1 directory. Read in place from the host; not staged. Required when run_oncodrivefml = true."
         },
         "oncodrivefml_cadd_tabix" : {
             "type": "string",
