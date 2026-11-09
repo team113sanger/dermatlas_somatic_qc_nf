@@ -27,4 +27,4 @@ sampling_min_obs = 10
     max_consecutive = 7
 
 [settings]
-cores =
+cores = __CORES__

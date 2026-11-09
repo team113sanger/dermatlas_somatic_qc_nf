@@ -53,7 +53,9 @@ process ONCODRIVEFML_RUN {
 
     script:
     """
-    sed -e "s|__CADD_TABIX__|${cadd_tabix}|" ${analysis_conf_template} > oncodrive_v2.conf
+    sed -e "s|__CADD_TABIX__|${cadd_tabix}|" \\
+        -e "s|__CORES__|${task.cpus}|" \\
+        ${analysis_conf_template} > oncodrive_v2.conf
 
     mkdir -p bbglab
     sed -e "s|__BGDATA_REPO__|${bgdata_repo}|" \\
