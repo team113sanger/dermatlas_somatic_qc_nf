@@ -20,7 +20,7 @@ changelog entry to indicate the impact of the change:
 - **INTEGRATION** - a change to how the pipeline integrates with other systems
   or infrastructure, without changing its scientific processing or results.
 
-## [Unreleased]
+## [1.3.0] - 2026-11-09
 ### Added
 - **REPRODUCIBILITY** - `ONCODRIVEFML` subworkflow: per-subcohort positive-selection analysis
   with OncodriveFML 2.4.0 (CADD v1.7 PHRED functional-impact bias), run on the host via the
