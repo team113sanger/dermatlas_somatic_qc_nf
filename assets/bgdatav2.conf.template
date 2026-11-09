@@ -1,0 +1,3 @@
+[bgdata]
+local_repository = __BGDATA_REPO__
+cache1 = __BGDATA_CACHE__

@@ -31,6 +31,7 @@ The defaults provided should be suitable for running out of the box but for some
 - The output directory to publish somatic variant QC results into
 - The `sigprofiler_outdir` for SigProfilerExtractor signature-calling outputs (set `run_signatures = false` to skip that subworkflow)
 - The `dndscv_outdir` for dNdScv significantly-mutated-gene outputs (set `run_dndscv = false` to skip that subworkflow)
+- The `oncodrivefml_outdir` for OncodriveFML positive-selection outputs (set `run_oncodrivefml = false` to skip that subworkflow). OncodriveFML needs the ~80 GB bgdata reference tree, a bgcache directory, the CADD SNV tabix file and a genomic-elements BED; on farm22 these default to `/lustre/scratch127/casm/projects/dermatlas/references/oncodrivefml/`, so no per-run staging is required. It runs on the host via the `oncodrivefml/2.4.0` environment module.
 - The cohort metadata manifest (`COHORT_METADATA_FILE`; optional and not yet read by any step)
 - The all-tumour, one-tumour-per-patient, independent-tumour and related-tumour sample lists generated in stage 1 (`DNA_PAIR_LIST_*_ALL`)
 
