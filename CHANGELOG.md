@@ -20,6 +20,11 @@ changelog entry to indicate the impact of the change:
 - **INTEGRATION** - a change to how the pipeline integrates with other systems
   or infrastructure, without changing its scientific processing or results.
 
+## [1.2.3] - 2026-11-09
+### Fixed
+- **INTEGRATION** - `.update-version.sh` is now committed as executable, so the release
+  procedure's `./.update-version.sh <version>` step runs as documented.
+
 ## [1.2.2] - 2026-10-22
 ### Added
 - **INTEGRATION** - run reporting. `lib/Utils.groovy` (shared verbatim with the other
