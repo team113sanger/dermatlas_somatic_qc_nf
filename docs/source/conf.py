@@ -9,7 +9,7 @@
 project = 'dermatlas_somatic_qc_nf'
 copyright = '2025, Jamie Billington'
 author = 'Kim Wong, Jamie Billington'
-release = '1.3.0'
+release = '1.3.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
