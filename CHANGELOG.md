@@ -20,7 +20,7 @@ changelog entry to indicate the impact of the change:
 - **INTEGRATION** - a change to how the pipeline integrates with other systems
   or infrastructure, without changing its scientific processing or results.
 
-## [Unreleased]
+## [1.3.1] - 2026-11-10
 ### Fixed
 - **INTEGRATION** - `assets/somatic_variants.config` now sets
   `oncodrivefml_outdir = "${ANALYSIS_DIR}/oncodrivefml"`, so production runs publish
